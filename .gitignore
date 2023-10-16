@@ -1,2 +1,4 @@
+# ignore the folder with the file 'packer_compiled.lua'
+# explanation: this file will be automatically generated, based on neovim version
 plugin/* 
 
