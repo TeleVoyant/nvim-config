@@ -34,7 +34,7 @@ cd ~/.config/nvim && nvim .
 
 Now sit back, relax; as packer fetches and installs plugins for you.
 
-- When done, press [q] to quit packer pop-up, them type ```:q``` and hit [Enter] and relaunch neovim again.
+- When done, press [q] to quit packer pop-up, then type ```:q``` and hit [Enter] to quit neovim; then relaunch it again.
 
 
 ## License
