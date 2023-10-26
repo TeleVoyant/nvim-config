@@ -106,109 +106,110 @@ cmp.setup({
                 end,
             }),
         },
-        snippet = {
-            expand = function(args)
-                require("luasnip").lsp_expand(args.body)
-            end,
-        },
+    snippet = {
+        expand = function(args)
+            require("luasnip").lsp_expand(args.body)
+        end,
+    },
 
-        -- mappings for nvim-cmp, with fallback protection when inactive
-        mapping = {
+    -- mappings for nvim-cmp, with fallback protection when inactive
+    mapping = {
 
-            ["<C-j>"] = cmp.mapping(function(fallback)
-                -- fallback() should release the key if completion is not visible
-                if cmp.visible() then
+        ["<C-j>"] = cmp.mapping(function(fallback)
+            -- fallback() should release the key if completion is not visible
+            if cmp.visible() then
+                cmp.select_next_item({ behavior = cmp.SelectBehavior, count = 1 })
+            else
+                fallback()
+            end
+        end
+        ),
+
+        ["<C-k>"] = cmp.mapping(function(fallback)
+            -- fallback() should release the key if completion is not visible
+            if cmp.visible() then
+                cmp.select_prev_item({ behavior = cmp.SelectBehavior, count = 1 })
+            else
+                fallback()
+            end
+        end
+        ),
+
+        ["<Enter>"] = cmp.mapping(function(fallback)
+            -- This little snippet will confirm with tab, and if no entry is selected, will confirm the first item
+            if cmp.visible() then
+                local entry = cmp.get_selected_entry()
+                if not entry then
                     cmp.select_next_item({ behavior = cmp.SelectBehavior, count = 1 })
-                else
-                    fallback()
                 end
+                cmp.confirm()
+            else
+                fallback()
             end
-            ),
+        end
+        ),
 
-            ["<C-k>"] = cmp.mapping(function(fallback)
-                -- fallback() should release the key if completion is not visible
-                if cmp.visible() then
-                    cmp.select_prev_item({ behavior = cmp.SelectBehavior, count = 1 })
-                else
-                    fallback()
+        ["<C-l>"] = cmp.mapping(function(fallback)
+            -- fallback() should release the key if completion is not visible
+            if cmp.visible() then
+                if luasnip.expand_or_jumpable() then
+                    vim.fn.feedkeys(t("<Plug>luasnip-expand-or-jump"), "")
                 end
+            else
+                fallback()
             end
-            ),
+        end
+        ),
 
-            ["<Enter>"] = cmp.mapping(function(fallback)
-                -- This little snippet will confirm with tab, and if no entry is selected, will confirm the first item
-                if cmp.visible() then
-                    local entry = cmp.get_selected_entry()
-                    if not entry then
-                        cmp.select_next_item({ behavior = cmp.SelectBehavior, count = 1 })
-                    end
-                    cmp.confirm()
-                else
-                    fallback()
+        ["<C-h>"] = cmp.mapping(function(fallback)
+            -- fallback() should release the key if completion is not visible
+            if cmp.visible() then
+                if luasnip.jumpable(-1) then
+                    vim.fn.feedkeys(t("<Plug>luasnip-jump-prev"), "")
                 end
+            else
+                fallback()
             end
-            ),
+        end
+        ),
 
-            ["<C-l>"] = cmp.mapping(function(fallback)
-                -- fallback() should release the key if completion is not visible
-                if cmp.visible() then
-                    if luasnip.expand_or_jumpable() then
-                        vim.fn.feedkeys(t("<Plug>luasnip-expand-or-jump"), "")
-                    end
+        ['<C-Space>'] = cmp.mapping(function(fallback)
+            -- fallback() should release the key if completion is not visible
+            if cmp.visible() then
+                if cmp.visible_docs() then
+                    cmp.close_docs()
                 else
-                    fallback()
+                    cmp.open_docs()
                 end
+            else
+                fallback()
             end
-            ),
+        end
+        ),
 
-            ["<C-h>"] = cmp.mapping(function(fallback)
-                -- fallback() should release the key if completion is not visible
-                if cmp.visible() then
-                    if luasnip.jumpable(-1) then
-                        vim.fn.feedkeys(t("<Plug>luasnip-jump-prev"), "")
-                    end
-                else
-                    fallback()
-                end
-            end
-            ),
+    },
 
-            ['<C-Space>'] = cmp.mapping(function(fallback)
-                -- fallback() should release the key if completion is not visible
-                if cmp.visible() then
-                    if cmp.visible_docs() then
-                        cmp.close_docs()
-                    else
-                        cmp.open_docs()
-                    end
-                else
-                    fallback()
-                end
-            end
-            ),
+    -- You should specify your *installed* sources.
+    sources = {
+        { name = "luasnip" },
+        { name = "nvim_lsp" },
+        { name = "buffer", keyword_length = 5, max_item_count = 5 },
+        --{ name = "cmp_git" },
+        --{ name = "path" },
+        --{ name = "neorg" },
+    },
 
-        },
+    experimental = {
+        -- dnt knw what this is..
+        ghost_text = false,
+    },
+})
 
-        -- You should specify your *installed* sources.
-        sources = {
-            { name = "luasnip" },
-            { name = "nvim_lsp" },
-            { name = "buffer", keyword_length = 5, max_item_count = 5 },
-            --{ name = "cmp_git" },
-            --{ name = "path" },
-            --{ name = "neorg" },
-        },
 
-        experimental = {
-            -- dnt knw what this is..
-            ghost_text = false,
-        },
-    })
-
-    require("cmp").setup.cmdline(":", {
-        sources = {
-            { name = "cmdline", keyword_length = 2 },
-        },
-    })
+require("cmp").setup.cmdline(":", {
+    sources = {
+        { name = "cmdline", keyword_length = 2 },
+    },
+})
 
 
