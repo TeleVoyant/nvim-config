@@ -57,10 +57,10 @@ return require('packer').startup(function(use)
     -- navigation bar plugin (top) --
     use ({
         'romgrk/barbar.nvim',
-        requires = {
-            'nvim-web-devicons',
-        },
+        requires = { 'nvim-tree/nvim-web-devicons' }, -- optional
     })
+    -- --------------------------- --
+
     -- -------------------------------------- --
     -- colors (+tailwindcss) highlight plugin --
     use 'brenoprata10/nvim-highlight-colors'
@@ -108,7 +108,7 @@ return require('packer').startup(function(use)
     use('theprimeagen/harpoon')
     -- undo tree implementation for neovim --
     use('mbbill/undotree')
-    -- forgot what this does, oooh remembered! its for Git in neovim :) --
+    -- forgot what this does... oooh remembered! its for Git in neovim :) --
     use('tpope/vim-fugitive')
     -- for all the indents and space highlightings --
     use('lukas-reineke/indent-blankline.nvim')

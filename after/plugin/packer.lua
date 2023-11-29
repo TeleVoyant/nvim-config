@@ -7,5 +7,5 @@ packer.init({
     display = {
         open_fn  = require('packer.util').float, -- An optional function to open a window for packer's display
         open_cmd = '65vnew \\[packer\\]', -- An optional command to open a window for packer's display
-},
+    },
 })

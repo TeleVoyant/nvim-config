@@ -5,7 +5,7 @@ require("daniels.set")
 
 -- ----__----_-----___----__--__--_____--____---- --
 --   / / `  / \   /  _\  / /.'." / __ ' / / `)    --
---  /  _ / / _ \ |   _  / _'.'  / __'  / __'.     --
+--  /  _ / / _ \ |  |_  / _'.'  / __'  / __'.     --
 -- /  /   / / \ \ \ __//_/ \\  /____. / /  \ \    --
 -- ---------------------------------------------- --
 -- Ensure thaat packer is installed in the system --
@@ -19,6 +19,7 @@ local ensure_packer = function()
         print("Then check your configurations, something's out of wack!")
             fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
             vim.cmd [[packadd packer.nvim]]
+        print("       Packer was successfully cloned and installed")
         print("happy coding / error hunting / head banging / teeth crunching")
         print("                                      yours, King Daniel")
         return true
