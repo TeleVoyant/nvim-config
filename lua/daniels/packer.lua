@@ -3,8 +3,9 @@
 -- Only required if you have packer configured as `opt`
 vim.cmd [[packadd packer.nvim]]
 
+
 -- --------------------------------- --
--- A TOTAL OF 19 PLUGINS! SHEEEEESH! --
+-- A TOTAL OF 20 PLUGINS! SHEEEEESH! --
 -- ---- TARGET: UNDER 15 PLUGINS --- --
 -- --------------------------------- --
 return require('packer').startup(function(use)
@@ -117,12 +118,13 @@ return require('packer').startup(function(use)
         'numToStr/Comment.nvim',
         config = function () require('Comment').setup {} end
     })
-    -- for advanced paring brackets, tags, quotes, etc --
-    -- use{
-    --     'altermo/ultimate-autopair.nvim',
-    --     event={'InsertEnter','CmdlineEnter'},
-    --     config=function () require('ultimate-autopair').setup() end,
-    -- }
+
+    -- for openscad programing --
+    use ({
+    	'salkin-mada/openscad.nvim',
+    	config = function() require('openscad') vim.g.openscad_load_snippets = true end,
+    	requires = { 'L3MON4D3/LuaSnip' }
+    })
 
     -- ----------------------- --
     -- FOR DOCUMENTATIONS ONLY --
