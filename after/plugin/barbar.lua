@@ -46,10 +46,10 @@ require'barbar'.setup {
     button = '',
     -- Enables / disables diagnostic symbols
     diagnostics = {
-      [vim.diagnostic.severity.ERROR] = {enabled = true, icon = ' '},
-      [vim.diagnostic.severity.WARN] = {enabled = true, icon = ' '},
+      [vim.diagnostic.severity.ERROR] = {enabled = true, icon = ' '},
+      [vim.diagnostic.severity.WARN] = {enabled = true, icon = ' '},
       [vim.diagnostic.severity.INFO] = {enabled = true, icon = 'ⓘ '},
-      [vim.diagnostic.severity.HINT] = {enabled = true, icon = '💡 '},
+      [vim.diagnostic.severity.HINT] = {enabled = true, icon = ' '},
     },
     filetype = {
       -- Sets the icon's highlight group.
@@ -64,7 +64,7 @@ require'barbar'.setup {
     -- Configure the icons on the bufferline when modified or pinned.
     -- Supports all the base icon options.
     modified = {button = '●'},
-    pinned = {button = '車'},
+    pinned = {button = ''},
 
     -- Configure the icons on the bufferline based on the visibility of a buffer.
     -- Supports all the base icon options, plus `modified` and `pinned`.
