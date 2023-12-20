@@ -89,7 +89,7 @@ ins_left {
 ins_left {
     -- mode component
     function()
-        return ' ꧁⚞᳆᳅᳄ '
+        return ' ꧁⚞ '
     end,
     color = function()
         -- auto change color according to neovims mode
@@ -158,7 +158,7 @@ ins_left {
 ins_left {
     -- Lsp server name .
     function()
-        local msg = 'No Active Lsp'
+        local msg = '󰺱  󱈾'
         local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
         local clients = vim.lsp.get_active_clients()
         if next(clients) == nil then
@@ -167,12 +167,12 @@ ins_left {
         for _, client in ipairs(clients) do
             local filetypes = client.config.filetypes
             if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-                return client.name:gsub("_", " ")
+                return '󰈷  ' .. client.name:gsub("_", " ")
             end
         end
         return msg
     end,
-    icon = ' ',
+    -- icon = '󰈷 ',
     color = { fg = '#ffffff', gui = 'bold' },
 }
 

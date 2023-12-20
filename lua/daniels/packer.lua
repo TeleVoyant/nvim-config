@@ -11,7 +11,7 @@ vim.cmd [[packadd packer.nvim]]
 return require('packer').startup(function(use)
     ------------------------------
     -- Packer can manage itself --
-    use 'wbthomason/packer.nvim'
+    use ('wbthomason/packer.nvim')
     ------------------------------
     ------------------------------
 
@@ -41,7 +41,7 @@ return require('packer').startup(function(use)
     -- ------------------------------------------------ --
     -- -------------------------- --
     -- beautiful icons every where --
-    use 'nvim-tree/nvim-web-devicons'
+    use ('nvim-tree/nvim-web-devicons')
     -- -------------------------- --
     -- status bar plugin (bottom) --
     use ({
@@ -64,7 +64,7 @@ return require('packer').startup(function(use)
 
     -- -------------------------------------- --
     -- colors (+tailwindcss) highlight plugin --
-    use 'brenoprata10/nvim-highlight-colors'
+    use ('brenoprata10/nvim-highlight-colors')
     -- ------------------- --
     -- color picker plugin --
     use ({
@@ -125,6 +125,9 @@ return require('packer').startup(function(use)
     	config = function() require('openscad') vim.g.openscad_load_snippets = true end,
     	requires = { 'L3MON4D3/LuaSnip' }
     })
+
+    -- hex editor
+    use ('RaafatTurki/hex.nvim')
 
     -- ----------------------- --
     -- FOR DOCUMENTATIONS ONLY --
