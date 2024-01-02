@@ -5,7 +5,7 @@ vim.cmd [[packadd packer.nvim]]
 
 
 -- --------------------------------- --
--- A TOTAL OF 20 PLUGINS! SHEEEEESH! --
+-- A TOTAL OF 22 PLUGINS! SHEEEEESH! --
 -- ---- TARGET: UNDER 15 PLUGINS --- --
 -- --------------------------------- --
 return require('packer').startup(function(use)
@@ -126,7 +126,7 @@ return require('packer').startup(function(use)
     	requires = { 'L3MON4D3/LuaSnip' }
     })
 
-    -- hex editor
+    -- hex editor --
     use ('RaafatTurki/hex.nvim')
 
     -- ----------------------- --
