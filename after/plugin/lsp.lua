@@ -8,11 +8,13 @@ local lsp = require('lsp-zero').preset({})
 
 -- make sure this servers are installed
 -- see :help lsp-zero-guide.customize-nvim-cmp
-require('mason').setup({})
+require('mason').setup({
+    PATH = "prepend", -- "skip" seems to cause the spawning error
+})
 require('mason-lspconfig').setup({
     -- Replace the language servers listed here
     -- with the ones you want to install
-    ensure_installed = {'zls', 'sqlls', 'rust_analyzer', 'eslint'},
+    ensure_installed = {'zls', 'sqlls', 'rust_analyzer', 'eslint', 'lua_ls'},
     handlers = {
         lsp.default_setup,
         lua_ls = function()
@@ -40,6 +42,13 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
     vim.keymap.set("i", "<C-i>", function() vim.lsp.buf.signature_help() end, opts)
 end)
+
+-- to show icons on the error column instead of E, W, H, I
+vim.fn.sign_define('DiagnosticSignError', { text = '', texthl = 'DiagnosticSignError' })
+vim.fn.sign_define('DiagnosticSignWarn', { text = '', texthl = 'DiagnosticSignWarn' })
+vim.fn.sign_define('DiagnosticSignInfo', { text = 'ⓘ', texthl = 'DiagnosticSignInfo' })
+vim.fn.sign_define('DiagnosticSignHint', { text = '', texthl = 'DiagnosticSignHint' })
+
 -- extend lsp to nvim-cmp
 lsp.extend_cmp()
 
@@ -70,6 +79,10 @@ luasnip.config.setup({
 local lspkind = require("lspkind")
 
 cmp.setup({
+    window = {
+        completion = { border = "rounded", winhighlight = "Normal:CmpNormal" },
+        documentation = { border = "rounded", winhighlight = "Normal:CmpDocNormal" }
+    },
     -- formatings of nvim-cmp
     formatting = {
         fields = {
@@ -196,7 +209,6 @@ cmp.setup({
         { name = "buffer", keyword_length = 5, max_item_count = 5 },
         --{ name = "cmp_git" },
         --{ name = "path" },
-        --{ name = "neorg" },
     },
 
     experimental = {

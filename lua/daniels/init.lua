@@ -1,4 +1,5 @@
 vim.cmd([[autocmd! BufWritePost init.lua source init.lua | echom "                         Reloaded init.lua"]])
+-- vim.cmd([[autocmd FileType markdown let g:indentLine_enabled=0]])
 require("daniels.remap")
 require("daniels.set")
 

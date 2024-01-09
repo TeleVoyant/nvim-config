@@ -5,8 +5,9 @@ vim.cmd [[packadd packer.nvim]]
 
 
 -- --------------------------------- --
--- A TOTAL OF 22 PLUGINS! SHEEEEESH! --
--- ---- TARGET: UNDER 15 PLUGINS --- --
+-- --------------------------------- --
+-- A TOTAL OF 26 PLUGINS! SHEEEEESH! --
+-- --------------------------------- --
 -- --------------------------------- --
 return require('packer').startup(function(use)
     ------------------------------
@@ -27,7 +28,7 @@ return require('packer').startup(function(use)
 
     -- the only finder you will ever need --
     use ({
-        'nvim-telescope/telescope.nvim', tag = '0.1.2',
+        'nvim-telescope/telescope.nvim', tag = '0.1.5',
         -- or                            , branch = '0.1.x',
         requires = {
             { 'nvim-lua/plenary.nvim' },
@@ -76,33 +77,38 @@ return require('packer').startup(function(use)
     -- ------------------ --
     -- ------------------ --
 
-    -- --------------------- --
-    -- tree blame for neovim --
+    -- ------------------------------------- --
+    -- tree blame for neovim, very important --
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
     -- tree blame playground --
     use('nvim-treesitter/playground')
-    -- --------------------- --
+    -- ------------------------------------- --
 
     -- ----------------------------------- --
     -- language server protocol for neovim --
     use({
         'VonHeikemen/lsp-zero.nvim',
-        branch = 'dev-v3',
+        branch = 'v3.x',
         requires = {
             -- Autocompletion
             { 'hrsh7th/nvim-cmp' }, -- Required
             { 'onsails/lspkind.nvim' }, -- Completion Icons, optional (necessary)
-            --{ 'danymat/neogen' },       -- Annotation Generator, optional (necessary)
             { 'hrsh7th/cmp-nvim-lsp' }, -- Required
             -- LSP Support
             { 'neovim/nvim-lspconfig' }, -- Required
-            { 'williamboman/mason.nvim' }, -- Optional
-            { 'williamboman/mason-lspconfig.nvim' }, -- Optional
+            { 'williamboman/mason.nvim' }, -- Optional (necessary)
+            { 'williamboman/mason-lspconfig.nvim' }, -- Optional (necessary)
             -- Snippets
             { 'L3MON4D3/LuaSnip' }, -- Required
         }
     })
     -- ----------------------------------- --
+    -- pretty list showing all the troubles --
+    use ({
+        'folke/trouble.nvim',
+        requires = { "nvim-tree/nvim-web-devicons" },
+    })
+    -- --------------------------- --
     -- ----------------------------------- --
 
     -- "GET OVER HEEEREE" switch btn files as fast as lightning --
@@ -117,6 +123,41 @@ return require('packer').startup(function(use)
     use ({
         'numToStr/Comment.nvim',
         config = function () require('Comment').setup {} end
+    })
+    -- Surround selections, stylishly --
+    use({
+        'kylechui/nvim-surround',
+        config = function() require("nvim-surround").setup() end
+    })
+    -- Cloak sensitive files from prying eyes
+    use('laytan/cloak.nvim')
+
+
+    -- Obsidian -- a simple, markdown-based notes app
+    use({
+        "epwalsh/obsidian.nvim",
+        tag = "*",  -- recommended, use latest release instead of latest commit
+        requires = {
+            -- Required.
+            "nvim-lua/plenary.nvim",
+            -- Optional
+            "hrsh7th/nvim-cmp",               -- for auto-completion
+            "nvim-telescope/telescope.nvim",  -- for quick-switch functionality
+        },
+        config = function()
+            require("obsidian").setup({
+                workspaces = {
+                    {
+                        name = "personal",
+                        path = "~/vaults/personal",
+                    },
+                    {
+                        name = "work",
+                        path = "~/vaults/work",
+                    },
+                },
+            })
+        end,
     })
 
     -- for openscad programing --
@@ -133,10 +174,15 @@ return require('packer').startup(function(use)
     -- FOR DOCUMENTATIONS ONLY --
     -- for markdown processing --
     use({
-        "iamcco/markdown-preview.nvim",
+        'iamcco/markdown-preview.nvim',
         run = function() vim.fn["mkdp#util#install"]() end,
     })
-    use({ "iamcco/markdown-preview.nvim", run = "cd app && npm install", setup = function() vim.g.mkdp_filetypes = { "markdown" } end, ft = { "markdown" }, })
+    use({ 
+        'iamcco/markdown-preview.nvim', 
+        run = "cd app && npm install", 
+        setup = function() vim.g.mkdp_filetypes = { "markdown" } end, 
+        ft = { "markdown" }, 
+    })
     -- ----------------------- --
 
 end)
