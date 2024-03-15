@@ -6,7 +6,6 @@ print(" ┊ MMMMMMMMMMMMMMMMMMMMMMMMMMMMX0kc;.........'',;lx0NMMMMMMMMMMMMMMMMMM
 print(" ┊ MMMMMMMMMMMMMMMMMMMMMMMMMNkc......... .......'',;:xNMMMMMMMMMMMMMMMMM ┊")
 print(" ┊ MMMMMMMMMMMMMMMMMMMMMMMMK'..''''..',;..........',',:dNMMMMMMMMMMMMMMM ┊")
 print(" ┊ MMMMMMMMMMMMMMMMMMMMMMNxclclokKXXXXXN0c.  ........'',:0MMMMMMMMMMMMMM ┊")
-print(" ┊ MMMMMMMMMMMMMMMMMMMMMWkl:;;:ldkOO00Okx;.   ..........',OMMMMMMMMMMMMM ┊")
 print(" ┊ MMMMMMMMMMMMMMMMMMMMN0c,,,;:clloolc:::;'..............';KMMMMMMMMMMMM ┊")
 print(" ┊ MMMMMMMMMMMMMMMMMMMXxc,;:cclddddllc::c:;'......  ......'lMMMMMMMMMMMM ┊")
 print(" ┊ MMMMMMMMMMMMMMMMMM0;,::cc;;:::clllcclccc;,...   .  .. ..:WMMMMMMMMMMM ┊")

@@ -22,6 +22,7 @@ local ensure_packer = function()
             vim.cmd [[packadd packer.nvim]]
         print("       Packer was successfully cloned and installed")
         print("happy coding / error hunting / head banging / teeth crunching")
+        print("    PS: restart neovim for all changes to take effect")
         print("                                      yours, King Daniel")
         return true
     end
@@ -53,9 +54,21 @@ local status_ok, packer = pcall(require, 'packer')
 if not status_ok then
     return
 end
+
 -- -------------------------------------------- --
 -- ------ END PACKER AUTO INITIALIZER --------- --
 -- -------------------------------------------- --
+
+-- Highlight when yanking (copying) text
+--  Try it with `yap` in normal mode
+--  See `:help vim.highlight.on_yank()`
+vim.api.nvim_create_autocmd('TextYankPost', {
+    desc = 'Highlight when yanking (copying) text',
+    group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
+    callback = function()
+        vim.highlight.on_yank({ timeout = "30" })
+    end,
+})
 
 
 print("                         welcome back King Daniel")

@@ -93,28 +93,32 @@ vim.keymap.set("n", "<A-h>", vim.cmd.undo)
 vim.keymap.set("n", "<A-l>", vim.cmd.redo)
 
 -- adaptive jumps silently
-vim.keymap.set("n", "<C-j>", ":lua JumpLinesByHeight('j')<CR>", { silent = true })
-vim.keymap.set("n", "<C-k>", ":lua JumpLinesByHeight('k')<CR>", { silent = true })
-vim.keymap.set("n", "<C-h>", ":lua JumpLinesByWidth('h')<CR>", { silent = true })
-vim.keymap.set("n", "<C-l>", ":lua JumpLinesByWidth('l')<CR>", { silent = true })
+vim.keymap.set("n", "<C-j>", ":lua vim.cmd(string.format('normal! %dj', JumpAmount('j')))<CR>", { silent = true })
+vim.keymap.set("n", "<C-k>", ":lua vim.cmd(string.format('normal! %dk', JumpAmount('k')))<CR>", { silent = true })
+vim.keymap.set("n", "<C-h>", ":lua vim.cmd(string.format('normal! %dh', JumpAmount('h')))<CR>", { silent = true })
+vim.keymap.set("n", "<C-l>", ":lua vim.cmd(string.format('normal! %dl', JumpAmount('l')))<CR>", { silent = true })
+-- jump with selection towards the botton
+vim.keymap.set("v", "<C-j>", ':lua vim.cmd(":\'<,\'>m .+" .. JumpAmount("j"))<CR>gv=gv', { silent = true });
+-- or towards the top
+vim.keymap.set("v", "<C-k>", ':lua vim.cmd(":\'<,\'>m .-" .. JumpAmount("k")-1)<CR>gv=gv', { silent = true });
 
 
 ----------------------------------------------------------
 ---- CUSTOM FUNCTIONS THAT GO WITH THE ABOVE MAPPINGS ----
 ----------------------------------------------------------
 
--- ADAPTIVE JUMPING --
+-- JUMPING DIST CALCULATOR --
 -- Jumps depending on window height and width
-function JumpLinesByHeight(key)
-    local winHeight = vim.api.nvim_win_get_height(0)
-    -- calculate jump amount (change 1.5 to customize interval)
-    local jump_amount = math.floor(winHeight / 1.5)
-    vim.cmd("normal! " .. jump_amount .. key)
+function JumpAmount(key)
+    local dist
+    if key == "j" or key == "k" then
+        dist = vim.api.nvim_win_get_height(0)
+    elseif key == "h" or key == "l" then
+        dist = vim.api.nvim_win_get_width(0)
+    else
+        print("unknown jump direction")
+        return 0
+    end
+    return math.floor(dist / 1.5)
 end
-function JumpLinesByWidth(key)
-    local winWidth = vim.api.nvim_win_get_width(0)
-    -- calculate jump amount (change 1.5 to customize interval)
-    local jump_amount = math.floor(winWidth / 1.5)
-    vim.cmd("normal! " .. jump_amount .. key)
-end
--- end ADAPTIVE JUMPING --
+-- end JUMPING DIST CALCULATOR --

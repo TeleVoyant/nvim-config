@@ -4,11 +4,11 @@
 vim.cmd [[packadd packer.nvim]]
 
 
--- --------------------------------- --
--- --------------------------------- --
--- A TOTAL OF 26 PLUGINS! SHEEEEESH! --
--- --------------------------------- --
--- --------------------------------- --
+-- ---------------------------------------------- --
+-- ---------------------------------------------- --
+-- ----- A TOTAL OF 25 PLUGINS! SHEEEEESH! ------ --
+-- ---------------------------------------------- --
+-- ---------------------------------------------- --
 return require('packer').startup(function(use)
     ------------------------------
     -- Packer can manage itself --
@@ -16,6 +16,12 @@ return require('packer').startup(function(use)
     ------------------------------
     ------------------------------
 
+    -- ------------------------------------- --
+    -- tree blame for neovim, very important --
+    use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
+    -- tree blame playground --
+    use('nvim-treesitter/playground')
+    -- ------------------------------------- --
 
     -- the perfect Rose-pine colors --
     use({
@@ -40,6 +46,7 @@ return require('packer').startup(function(use)
     ------------------------------------------------------
     ------------------- additional plugins ---------------
     -- ------------------------------------------------ --
+
     -- -------------------------- --
     -- beautiful icons every where --
     use ('nvim-tree/nvim-web-devicons')
@@ -69,20 +76,12 @@ return require('packer').startup(function(use)
     -- ------------------- --
     -- color picker plugin --
     use ({
-        "ziontee113/color-picker.nvim",
+        'ziontee113/color-picker.nvim',
         config = function()
             require("color-picker")
         end,
     })
     -- ------------------ --
-    -- ------------------ --
-
-    -- ------------------------------------- --
-    -- tree blame for neovim, very important --
-    use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
-    -- tree blame playground --
-    use('nvim-treesitter/playground')
-    -- ------------------------------------- --
 
     -- ----------------------------------- --
     -- language server protocol for neovim --
@@ -100,65 +99,50 @@ return require('packer').startup(function(use)
             { 'williamboman/mason-lspconfig.nvim' }, -- Optional (necessary)
             -- Snippets
             { 'L3MON4D3/LuaSnip' }, -- Required
+            -- LSP Notifications
+            { 'j-hui/fidget.nvim' }, -- Optional
         }
     })
+    -- ---------------------------------- --
+
     -- ----------------------------------- --
     -- pretty list showing all the troubles --
     use ({
         'folke/trouble.nvim',
-        requires = { "nvim-tree/nvim-web-devicons" },
+        requires = { 'nvim-tree/nvim-web-devicons' },
     })
     -- --------------------------- --
+
+    -- ----------------------------------- --
+    -- - for all the comments in the code- --
+    use ({
+        'folke/todo-comments.nvim',
+        requires = { 'nvim-lua/plenary.nvim' },
+        opts = { signs = true },
+    })
     -- ----------------------------------- --
 
     -- "GET OVER HEEEREE" switch btn files as fast as lightning --
     use('theprimeagen/harpoon')
+    
     -- undo tree implementation for neovim --
     use('mbbill/undotree')
+    
     -- forgot what this does... oooh remembered! its for Git in neovim :) --
     use('tpope/vim-fugitive')
+
     -- for all the indents and space highlightings --
     use('lukas-reineke/indent-blankline.nvim')
+
     -- for comments --
     use ({
         'numToStr/Comment.nvim',
         config = function () require('Comment').setup {} end
     })
-    -- Surround selections, stylishly --
-    use({
-        'kylechui/nvim-surround',
-        config = function() require("nvim-surround").setup() end
-    })
+
     -- Cloak sensitive files from prying eyes
     use('laytan/cloak.nvim')
 
-
-    -- Obsidian -- a simple, markdown-based notes app
-    use({
-        "epwalsh/obsidian.nvim",
-        tag = "*",  -- recommended, use latest release instead of latest commit
-        requires = {
-            -- Required.
-            "nvim-lua/plenary.nvim",
-            -- Optional
-            "hrsh7th/nvim-cmp",               -- for auto-completion
-            "nvim-telescope/telescope.nvim",  -- for quick-switch functionality
-        },
-        config = function()
-            require("obsidian").setup({
-                workspaces = {
-                    {
-                        name = "personal",
-                        path = "~/vaults/personal",
-                    },
-                    {
-                        name = "work",
-                        path = "~/vaults/work",
-                    },
-                },
-            })
-        end,
-    })
 
     -- for openscad programing --
     use ({
@@ -172,7 +156,7 @@ return require('packer').startup(function(use)
 
     -- ----------------------- --
     -- FOR DOCUMENTATIONS ONLY --
-    -- for markdown processing --
+    -- - markdown processing - --
     use({
         'iamcco/markdown-preview.nvim',
         run = function() vim.fn["mkdp#util#install"]() end,
@@ -186,4 +170,7 @@ return require('packer').startup(function(use)
     -- ----------------------- --
 
 end)
-
+-- ---------------------------------------------- --
+-- ------------- End of plugin list ------------- --
+-- ---------------------------------------------- --
+-- ---------------------------------------------- --

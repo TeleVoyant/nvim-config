@@ -1,6 +1,6 @@
 require'nvim-treesitter.configs'.setup {
     -- A list of parser names, or "all" (the four listed parsers should always be installed)
-    ensure_installed = { "typescript", "css", "c", "cpp", "lua", "vim", "rust", "zig" },
+    ensure_installed = { "typescript", "css", "c", "cpp", "lua", "vim", "rust", "zig", "cmake", "vimdoc", "bash" },
 
     -- list of filetypes to ignore
     -- ignore_ft = { "php" },

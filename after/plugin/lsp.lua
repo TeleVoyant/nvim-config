@@ -6,6 +6,17 @@ vim.opt.signcolumn = 'yes'
 -- ------------------------------------- --
 local lsp = require('lsp-zero').preset({})
 
+-- lsp notifications will be processed here
+require('fidget').setup({
+    progress = {
+        -- how LSP progress messages are displayed as notifications
+        display = {
+            render_limit = 9,          -- How many LSP messages to show at once
+            done_ttl = 2,               -- How long a message should persist after completion
+        },
+    },
+})
+
 -- make sure this servers are installed
 -- see :help lsp-zero-guide.customize-nvim-cmp
 require('mason').setup({
@@ -80,8 +91,8 @@ local lspkind = require("lspkind")
 
 cmp.setup({
     window = {
-        completion = { border = "rounded", winhighlight = "Normal:CmpNormal" },
-        documentation = { border = "rounded", winhighlight = "Normal:CmpDocNormal" }
+        completion = { winhighlight = "Normal:CmpNormal" },
+        documentation = { winhighlight = "Normal:CmpDocNormal" }
     },
     -- formatings of nvim-cmp
     formatting = {
@@ -148,7 +159,7 @@ cmp.setup({
         end
         ),
 
-        ["<Enter>"] = cmp.mapping(function(fallback)
+        ["<C-y>"] = cmp.mapping(function(fallback)
             -- This little snippet will confirm with tab, and if no entry is selected, will confirm the first item
             if cmp.visible() then
                 local entry = cmp.get_selected_entry()
