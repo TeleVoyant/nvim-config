@@ -124,10 +124,10 @@ return require('packer').startup(function(use)
 
     -- "GET OVER HEEEREE" switch btn files as fast as lightning --
     use('theprimeagen/harpoon')
-    
+
     -- undo tree implementation for neovim --
     use('mbbill/undotree')
-    
+
     -- forgot what this does... oooh remembered! its for Git in neovim :) --
     use('tpope/vim-fugitive')
 
@@ -161,11 +161,11 @@ return require('packer').startup(function(use)
         'iamcco/markdown-preview.nvim',
         run = function() vim.fn["mkdp#util#install"]() end,
     })
-    use({ 
-        'iamcco/markdown-preview.nvim', 
-        run = "cd app && npm install", 
-        setup = function() vim.g.mkdp_filetypes = { "markdown" } end, 
-        ft = { "markdown" }, 
+    use({
+        'iamcco/markdown-preview.nvim',
+        run = "cd app && npm install",
+        setup = function() vim.g.mkdp_filetypes = { "markdown" } end,
+        ft = { "markdown" },
     })
     -- ----------------------- --
 

@@ -68,12 +68,6 @@ vim.keymap.set("n", "<leader>f", function()
     vim.lsp.buf.format()
 end)
 
----- the quick-fix list navigations
---vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
---vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
---vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
---vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
-
 -- advanced search and replace word shortcut
 -- grabs the contents under the cursor and initiates replace action
 vim.keymap.set("n", "<leader>sw", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
@@ -92,15 +86,19 @@ vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 vim.keymap.set("n", "<A-h>", vim.cmd.undo)
 vim.keymap.set("n", "<A-l>", vim.cmd.redo)
 
+-- invisibility cloak toggle
+vim.keymap.set("n", "<leader>H", ":CloakToggle<CR>", { silent = true })
+vim.keymap.set("n", "<leader>h", ":CloakPreviewLine<CR>", { silent = true })
+
 -- adaptive jumps silently
 vim.keymap.set("n", "<C-j>", ":lua vim.cmd(string.format('normal! %dj', JumpAmount('j')))<CR>", { silent = true })
 vim.keymap.set("n", "<C-k>", ":lua vim.cmd(string.format('normal! %dk', JumpAmount('k')))<CR>", { silent = true })
 vim.keymap.set("n", "<C-h>", ":lua vim.cmd(string.format('normal! %dh', JumpAmount('h')))<CR>", { silent = true })
 vim.keymap.set("n", "<C-l>", ":lua vim.cmd(string.format('normal! %dl', JumpAmount('l')))<CR>", { silent = true })
 -- jump with selection towards the botton
-vim.keymap.set("v", "<C-j>", ':lua vim.cmd(":\'<,\'>m .+" .. JumpAmount("j"))<CR>gv=gv', { silent = true });
--- or towards the top
-vim.keymap.set("v", "<C-k>", ':lua vim.cmd(":\'<,\'>m .-" .. JumpAmount("k")-1)<CR>gv=gv', { silent = true });
+vim.keymap.set("v", "<C-j>", ':lua vim.cmd(":\'<,\'>m .+" .. JumpAmount("j"))<CR>gv=gv', { silent = true })
+-- or towards the top with the selection
+vim.keymap.set("v", "<C-k>", ':lua vim.cmd(":\'<,\'>m .-" .. JumpAmount("k")+1)<CR>gv=gv', { silent = true })
 
 
 ----------------------------------------------------------
