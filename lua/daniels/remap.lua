@@ -38,19 +38,19 @@ end)
 -- "greatest remap ever" says the primeagen
 -- prevents ALTERNING of copied buffer to the replaced contents
 -- by deleting the replaced contents into "the null void"
-vim.keymap.set("x", "<leader>p", "\"_dP")
+vim.keymap.set("x", "<leader>p", '"_dP')
 
 -- next greatest remap ever : asbjornHaland
 -- toggles the system clipboard, for pasting outside neovim
-vim.keymap.set("n", "<leader>y", "\"+y")
-vim.keymap.set("v", "<leader>y", "\"+y")
-vim.keymap.set("n", "<leader>Y", "\"+Y")
--- or you could just use plane "y" for using only inside neovim (text buffer) 
+vim.keymap.set("n", "<leader>y", '"+y')
+vim.keymap.set("v", "<leader>y", '"+y')
+vim.keymap.set("n", "<leader>Y", '"+Y')
+-- or you could just use plane "y" for using only inside neovim (text buffer)
 -- beautiful flexibity
 
 -- this also deletes selected contents into "the null void"
-vim.keymap.set("n", "<leader>d", "\"_d")
-vim.keymap.set("v", "<leader>d", "\"_d")
+vim.keymap.set("n", "<leader>d", '"_d')
+vim.keymap.set("v", "<leader>d", '"_d')
 
 -- This is an alternative to <ESC> key
 -- <ESC> is a bit out of reach!
@@ -91,15 +91,14 @@ vim.keymap.set("n", "<leader>H", ":CloakToggle<CR>", { silent = true })
 vim.keymap.set("n", "<leader>h", ":CloakPreviewLine<CR>", { silent = true })
 
 -- adaptive jumps silently
-vim.keymap.set("n", "<C-j>", ":lua vim.cmd(string.format('normal! %dj', JumpAmount('j')))<CR>", { silent = true })
-vim.keymap.set("n", "<C-k>", ":lua vim.cmd(string.format('normal! %dk', JumpAmount('k')))<CR>", { silent = true })
-vim.keymap.set("n", "<C-h>", ":lua vim.cmd(string.format('normal! %dh', JumpAmount('h')))<CR>", { silent = true })
-vim.keymap.set("n", "<C-l>", ":lua vim.cmd(string.format('normal! %dl', JumpAmount('l')))<CR>", { silent = true })
+vim.keymap.set("n", "<C-j>", ":lua vim.cmd(string.format('normal! %dj', JumpAmount('j', 'n')))<CR>", { silent = true })
+vim.keymap.set("n", "<C-k>", ":lua vim.cmd(string.format('normal! %dk', JumpAmount('k', 'n')))<CR>", { silent = true })
+vim.keymap.set("n", "<C-h>", ":lua vim.cmd(string.format('normal! %dh', JumpAmount('h', 'n')))<CR>", { silent = true })
+vim.keymap.set("n", "<C-l>", ":lua vim.cmd(string.format('normal! %dl', JumpAmount('l', 'n')))<CR>", { silent = true })
 -- jump with selection towards the botton
-vim.keymap.set("v", "<C-j>", ':lua vim.cmd(":\'<,\'>m .+" .. JumpAmount("j"))<CR>gv=gv', { silent = true })
+vim.keymap.set("v", "<C-j>", ':lua vim.cmd(":\'<,\'>m .+" .. JumpAmount("j", "v"))<CR>gv=gv', { silent = true })
 -- or towards the top with the selection
-vim.keymap.set("v", "<C-k>", ':lua vim.cmd(":\'<,\'>m .-" .. JumpAmount("k")+1)<CR>gv=gv', { silent = true })
-
+vim.keymap.set("v", "<C-k>", ':lua vim.cmd(":\'<,\'>m .-" .. JumpAmount("k", "v")-1)<CR>gv=gv', { silent = true })
 
 ----------------------------------------------------------
 ---- CUSTOM FUNCTIONS THAT GO WITH THE ABOVE MAPPINGS ----
@@ -107,15 +106,24 @@ vim.keymap.set("v", "<C-k>", ':lua vim.cmd(":\'<,\'>m .-" .. JumpAmount("k")+1)<
 
 -- JUMPING DIST CALCULATOR --
 -- Jumps depending on window height and width
-function JumpAmount(key)
+function JumpAmount(key, mode)
     local dist
-    if key == "j" or key == "k" then
+    local befDist = vim.fn.line("'<")
+    local aftDist = vim.api.nvim_buf_line_count(0) - vim.fn.line("'>")
+    if key == "j" then -- vertical down
         dist = vim.api.nvim_win_get_height(0)
-    elseif key == "h" or key == "l" then
+        if mode == "v" and dist > aftDist + 4 then -- check if dist exceeds jumpable interval
+            dist = aftDist + 4
+        end
+    elseif key == "k" then --vertical up
+        dist = vim.api.nvim_win_get_height(0)
+        if mode == "v" and dist > befDist + 3 then -- check if dist exceeds jumpable interval
+            dist = befDist + 3
+        end
+    elseif key == "h" or key == "l" then -- horizontal left right
         dist = vim.api.nvim_win_get_width(0)
     else
-        print("unknown jump direction")
-        return 0
+        return 0 -- unknown direction, dont jump
     end
     return math.floor(dist / 1.5)
 end

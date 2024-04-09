@@ -1,4 +1,3 @@
-
 local highlight = {
     "iblIndent1",
     "iblIndent2",
@@ -17,7 +16,7 @@ local highlight = {
     "iblIndent15",
     "iblIndent16",
 }
-local hooks = require "ibl.hooks"
+local hooks = require("ibl.hooks")
 -- create the highlight groups in the highlight setup hook, so they are reset
 -- every time the colorscheme changes
 hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
@@ -40,17 +39,13 @@ hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
 end)
 
 vim.g.rainbow_delimiters = { highlight = highlight }
-require("ibl").setup {
+require("ibl").setup({
     indent = {
-        char = "ᐧ"
+        char = "ᐧ",
     },
     scope = {
-        highlight = highlight
-    }
-}
+        highlight = highlight,
+    },
+})
 
-hooks.register(
-hooks.type.SCOPE_HIGHLIGHT,
-hooks.builtin.scope_highlight_from_extmark
-)
-
+hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)

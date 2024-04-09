@@ -31,4 +31,3 @@ print(" ┊ MMMMMMMMMMMMMMMWWWNNNNXO0K000;',',;::::xO0K0O0k0OO00OKKXXKKKXKNKNXXN
 print(" ┊ MMMMMMMMMMMWNXNNNNXNXKXK0K0Od..',,,,;l0OK00x0xOOk0OxOOKXKKXNKNk0K0NKX ┊")
 print(" ┊_______________________________________________________________________┊")
 require("daniels")
-

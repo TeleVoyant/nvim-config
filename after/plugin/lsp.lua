@@ -1,69 +1,122 @@
 -- reserve space for diagnostic icons
-vim.opt.signcolumn = 'yes'
+vim.opt.signcolumn = "yes"
 
 -- ------------------------------------- --
 -- lsp-zero configurations are down here --
 -- ------------------------------------- --
-local lsp = require('lsp-zero').preset({})
+local lsp = require("lsp-zero").preset({})
 
+-- ---------------------------------------- --
 -- lsp notifications will be processed here
-require('fidget').setup({
+require("fidget").setup({
     progress = {
         -- how LSP progress messages are displayed as notifications
         display = {
-            render_limit = 9,          -- How many LSP messages to show at once
-            done_ttl = 2,               -- How long a message should persist after completion
+            render_limit = 9, -- How many LSP messages to show at once
+            done_ttl = 2, -- How long a message should persist after completion
         },
     },
 })
+-- ---------------------------------------- --
 
+-- ---------------------------------- --
+-- mason configurations are down here --
+-- ---------------------------------- --
 -- make sure this servers are installed
 -- see :help lsp-zero-guide.customize-nvim-cmp
-require('mason').setup({
+require("mason").setup({
     PATH = "prepend", -- "skip" seems to cause the spawning error
 })
-require('mason-lspconfig').setup({
+require("mason-tool-installer").setup({
+    ensure_installed = {
+        "prettier",
+        "stylua",
+        "isort",
+        "black",
+        "codespell",
+        "goimports",
+        "eslint_d",
+        "pylint",
+        "cpplint",
+        "clang-format",
+        "vint",
+    },
+})
+require("mason-lspconfig").setup({
     -- Replace the language servers listed here
     -- with the ones you want to install
-    ensure_installed = {'zls', 'sqlls', 'rust_analyzer', 'eslint', 'lua_ls'},
+    ensure_installed = {
+        "zls",
+        "sqlls",
+        "rust_analyzer",
+        "gopls",
+        "lua_ls",
+        "vimls",
+        "emmet_language_server",
+        "intelephense",
+        "dockerls",
+        "docker_compose_language_service",
+    },
     handlers = {
         lsp.default_setup,
         lua_ls = function()
             -- (Optional) Configure lua language server for neovim
-            require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
+            require("lspconfig").lua_ls.setup(lsp.nvim_lua_ls())
         end,
     },
 })
+-- ---------------------------------- --
+-- ---------------------------------- --
 
-local cmp_action = require('lsp-zero').cmp_action()
+local cmp_action = require("lsp-zero").cmp_action()
 
 lsp.on_attach(function(client, bufnr)
     print("LSP active")
     local opts = { buffer = bufnr, remap = false }
     -- lsp keymaps
-    vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-    vim.keymap.set("n", "gD", function() vim.lsp.buf.implementation() end, opts)
-    vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
-    vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
-    vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
-    vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
-    vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
-    vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
-    vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
-    vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-    vim.keymap.set("i", "<C-i>", function() vim.lsp.buf.signature_help() end, opts)
+    vim.keymap.set("n", "gd", function()
+        vim.lsp.buf.definition()
+    end, opts)
+    vim.keymap.set("n", "gD", function()
+        vim.lsp.buf.implementation()
+    end, opts)
+    vim.keymap.set("n", "K", function()
+        vim.lsp.buf.hover()
+    end, opts)
+    vim.keymap.set("n", "<leader>vws", function()
+        vim.lsp.buf.workspace_symbol()
+    end, opts)
+    vim.keymap.set("n", "<leader>vd", function()
+        vim.diagnostic.open_float()
+    end, opts)
+    vim.keymap.set("n", "[d", function()
+        vim.diagnostic.goto_next()
+    end, opts)
+    vim.keymap.set("n", "]d", function()
+        vim.diagnostic.goto_prev()
+    end, opts)
+    vim.keymap.set("n", "<leader>vca", function()
+        vim.lsp.buf.code_action()
+    end, opts)
+    vim.keymap.set("n", "<leader>vrr", function()
+        vim.lsp.buf.references()
+    end, opts)
+    vim.keymap.set("n", "<leader>vrn", function()
+        vim.lsp.buf.rename()
+    end, opts)
+    vim.keymap.set("i", "<C-i>", function()
+        vim.lsp.buf.signature_help()
+    end, opts)
 end)
 
 -- to show icons on the error column instead of E, W, H, I
-vim.fn.sign_define('DiagnosticSignError', { text = '', texthl = 'DiagnosticSignError' })
-vim.fn.sign_define('DiagnosticSignWarn', { text = '', texthl = 'DiagnosticSignWarn' })
-vim.fn.sign_define('DiagnosticSignInfo', { text = 'ⓘ', texthl = 'DiagnosticSignInfo' })
-vim.fn.sign_define('DiagnosticSignHint', { text = '', texthl = 'DiagnosticSignHint' })
+vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError" })
+vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn" })
+vim.fn.sign_define("DiagnosticSignInfo", { text = "ⓘ", texthl = "DiagnosticSignInfo" })
+vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
 
 -- extend lsp to nvim-cmp
 lsp.extend_cmp()
-
-
 
 -- --------------------------------------------- --
 -- --------------------------------------------- --
@@ -78,6 +131,7 @@ local t = function(str)
     return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
 
+-- snippets section
 local luasnip = require("luasnip")
 
 -- Do not jump to snippet if i'm outside of it
@@ -92,7 +146,7 @@ local lspkind = require("lspkind")
 cmp.setup({
     window = {
         completion = { winhighlight = "Normal:CmpNormal" },
-        documentation = { winhighlight = "Normal:CmpDocNormal" }
+        documentation = { winhighlight = "Normal:CmpDocNormal" },
     },
     -- formatings of nvim-cmp
     formatting = {
@@ -101,8 +155,8 @@ cmp.setup({
             cmp.ItemField.Abbr,
             cmp.ItemField.Menu,
         },
-        format = require('lspkind').cmp_format({
-            mode = 'symbol',
+        format = require("lspkind").cmp_format({
+            mode = "symbol",
             before = function(entry, vim_item)
                 -- Get the full snippet (and only keep first line)
                 local word = entry:get_insert_text()
@@ -121,15 +175,15 @@ cmp.setup({
                 if
                     entry.completion_item.insertTextFormat == types.lsp.InsertTextFormat.Snippet
                     and string.sub(vim_item.abbr, -1, -1) == "~"
-                    then
-                        word = word .. "~"
-                    end
-                    vim_item.abbr = word
+                then
+                    word = word .. "~"
+                end
+                vim_item.abbr = word
 
-                    return vim_item
-                end,
-            }),
-        },
+                return vim_item
+            end,
+        }),
+    },
     snippet = {
         expand = function(args)
             require("luasnip").lsp_expand(args.body)
@@ -146,8 +200,7 @@ cmp.setup({
             else
                 fallback()
             end
-        end
-        ),
+        end),
 
         ["<C-k>"] = cmp.mapping(function(fallback)
             -- fallback() should release the key if completion is not visible
@@ -156,10 +209,9 @@ cmp.setup({
             else
                 fallback()
             end
-        end
-        ),
+        end),
 
-        ["<C-y>"] = cmp.mapping(function(fallback)
+        ["<C-i>"] = cmp.mapping(function(fallback)
             -- This little snippet will confirm with tab, and if no entry is selected, will confirm the first item
             if cmp.visible() then
                 local entry = cmp.get_selected_entry()
@@ -170,8 +222,7 @@ cmp.setup({
             else
                 fallback()
             end
-        end
-        ),
+        end),
 
         ["<C-l>"] = cmp.mapping(function(fallback)
             -- fallback() should release the key if completion is not visible
@@ -182,8 +233,7 @@ cmp.setup({
             else
                 fallback()
             end
-        end
-        ),
+        end),
 
         ["<C-h>"] = cmp.mapping(function(fallback)
             -- fallback() should release the key if completion is not visible
@@ -194,23 +244,20 @@ cmp.setup({
             else
                 fallback()
             end
-        end
-        ),
+        end),
 
-        ['<C-Space>'] = cmp.mapping(function(fallback)
+        ["<C-Space>"] = cmp.mapping(function(fallback)
             -- fallback() should release the key if completion is not visible
-            if cmp.visible() then
-                if cmp.visible_docs() then
-                    cmp.close_docs()
-                else
-                    cmp.open_docs()
-                end
+            if cmp.visible() and cmp.visible_docs() then
+                cmp.close_docs()
+            elseif cmp.visible() and not cmp.visible_docs() then
+                cmp.abort()
+            elseif not cmp.visible() then
+                cmp.complete()
             else
                 fallback()
             end
-        end
-        ),
-
+        end),
     },
 
     -- You should specify your *installed* sources.
@@ -218,8 +265,8 @@ cmp.setup({
         { name = "luasnip" },
         { name = "nvim_lsp" },
         { name = "buffer", keyword_length = 5, max_item_count = 5 },
+        { name = "path" },
         --{ name = "cmp_git" },
-        --{ name = "path" },
     },
 
     experimental = {
@@ -228,11 +275,8 @@ cmp.setup({
     },
 })
 
-
 require("cmp").setup.cmdline(":", {
     sources = {
         { name = "cmdline", keyword_length = 2 },
     },
 })
-
-
