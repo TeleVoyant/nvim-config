@@ -108,8 +108,8 @@ vim.keymap.set("v", "<C-k>", ':lua vim.cmd(":\'<,\'>m .-" .. JumpAmount("k", "v"
 -- Jumps depending on window height and width
 function JumpAmount(key, mode)
     local dist
-    local befDist = vim.fn.line("'<")
-    local aftDist = vim.api.nvim_buf_line_count(0) - vim.fn.line("'>")
+    local befDist = vim.fn.line("'<") -- btn Top and start of selection
+    local aftDist = vim.api.nvim_buf_line_count(0) - vim.fn.line("'>") -- btn end of selection and Bot
     if key == "j" then -- vertical down
         dist = vim.api.nvim_win_get_height(0)
         if mode == "v" and dist > aftDist + 4 then -- check if dist exceeds jumpable interval

@@ -153,6 +153,15 @@ return require("packer").startup(function(use)
 
     -- forgot what this does... oooh remembered! its for Git in neovim :) --
     use("tpope/vim-fugitive")
+    use("lewis6991/gitsigns.nvim")
+    use({
+        "pwntester/octo.nvim",
+        requires = {
+            { "nvim-lua/plenary.nvim" },
+            { "nvim-telescope/telescope.nvim" },
+            { "nvim-tree/nvim-web-devicons" },
+        },
+    })
 
     -- for all the indents and space highlightings --
     use("lukas-reineke/indent-blankline.nvim")
