@@ -112,6 +112,22 @@ return require("packer").startup(function(use)
     -- ---------------------------------- --
 
     -- ----------------------------------- --
+    --  debug adapter protocol for neovim  --
+    use({
+        "rcarriga/nvim-dap-ui",
+        requires = {
+            -- DAP plugin
+            { "mfussenegger/nvim-dap" },
+            -- A library for asynchronous IO in Neovim
+            { "nvim-neotest/nvim-nio" },
+            -- virtual text support to nvim-dap
+            { "theHamsta/nvim-dap-virtual-text" },
+            -- DAP store
+            { "williamboman/mason.nvim" },
+        },
+    })
+
+    -- ----------------------------------- --
     -- pretty list showing all the troubles --
     use({
         "folke/trouble.nvim",
@@ -199,23 +215,6 @@ return require("packer").startup(function(use)
     -- hex editor --
     use("RaafatTurki/hex.nvim")
 
-    -- ----------------------- --
-    -- FOR DOCUMENTATIONS ONLY --
-    -- - markdown processing - --
-    use({
-        "iamcco/markdown-preview.nvim",
-        run = function()
-            vim.fn["mkdp#util#install"]()
-        end,
-    })
-    use({
-        "iamcco/markdown-preview.nvim",
-        run = "cd app && npm install",
-        setup = function()
-            vim.g.mkdp_filetypes = { "markdown" }
-        end,
-        ft = { "markdown" },
-    })
     -- ----------------------- --
 end)
 -- ---------------------------------------------- --

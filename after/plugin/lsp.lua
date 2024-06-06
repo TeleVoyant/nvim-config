@@ -56,6 +56,7 @@ require("mason-lspconfig").setup({
         "intelephense",
         "dockerls",
         "docker_compose_language_service",
+        "bashls",
     },
     handlers = {
         lsp.default_setup,
