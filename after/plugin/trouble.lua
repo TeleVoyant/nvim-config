@@ -1,22 +1,11 @@
 require("trouble").setup({
-    padding = false,
-    height = 7,
-    use_diagnostic_signs = true,
+    focus = true,
+    max_items = 500,
 })
 
--- keymaps, preffering <leader>da maybe?
-vim.keymap.set("n", "<leader>xx", function()
-    require("trouble").toggle()
-end)
-vim.keymap.set("n", "<leader>xw", function()
-    require("trouble").toggle("workspace_diagnostics")
-end)
-vim.keymap.set("n", "<leader>xd", function()
-    require("trouble").toggle("document_diagnostics")
-end)
-vim.keymap.set("n", "<leader>xq", function()
-    require("trouble").toggle("quickfix")
-end)
-vim.keymap.set("n", "<leader>xl", function()
-    require("trouble").toggle("loclist")
-end)
+-- keymaps, preferring <leader>da maybe?
+vim.keymap.set("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>")
+vim.keymap.set("n", "<leader>xw", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>")
+vim.keymap.set("n", "<leader>xd", "<cmd>Trouble lsp toggle focus=false win.position=right<cr>")
+vim.keymap.set("n", "<leader>xq", "<cmd>Trouble qflist toggle<cr>")
+vim.keymap.set("n", "<leader>xl", "<cmd>Trouble loclist toggle<cr>")

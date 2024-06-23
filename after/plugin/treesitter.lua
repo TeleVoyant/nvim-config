@@ -1,10 +1,21 @@
 require("nvim-treesitter.configs").setup({
     -- A list of parser names, or "all" (the four listed parsers should always be installed)
     ensure_installed = {
+        "html",
         "typescript",
+        "javascript",
+        "json",
+        "markdown",
         "css",
+        "php",
+        "ini",
+        "xml",
+        "dockerfile",
+        "yaml",
+        "sql",
         "c",
         "cpp",
+        "cmake",
         "lua",
         "vim",
         "rust",
@@ -13,6 +24,7 @@ require("nvim-treesitter.configs").setup({
         "cmake",
         "vimdoc",
         "bash",
+        "nix",
     },
 
     -- list of filetypes to ignore

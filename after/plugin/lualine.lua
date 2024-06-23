@@ -123,7 +123,7 @@ ins_left({
 ins_left({
     -- filesize component
     "filesize",
-    cond = conditions.buffer_not_empty,
+    cond = conditions.hide_in_width,
 })
 
 ins_left({
@@ -132,20 +132,12 @@ ins_left({
     color = { fg = colors.magenta, gui = "bold" },
 })
 
-ins_left({ "location" })
+ins_left({
+    "location",
+    cond = conditions.hide_in_width,
+})
 
 ins_left({ "progress", color = { fg = colors.fg, gui = "bold" } })
-
--- ins_left {
---     'diagnostics',
---     sources = { 'nvim_diagnostic' },
---     symbols = { error = ' ', warn = ' ', info = ' ' },
---     diagnostics_color = {
---         color_error = { fg = colors.red },
---         color_warn = { fg = colors.yellow },
---         color_info = { fg = colors.cyan },
---     },
--- }
 
 -- Insert mid section. You can make any number of sections in neovim :)
 -- for lualine it's any number greater then 2
@@ -160,7 +152,7 @@ ins_left({
     function()
         local msg = "󰺱  󱈾"
         local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
-        local clients = vim.lsp.get_active_clients()
+        local clients = vim.lsp.get_clients()
         if next(clients) == nil then
             return msg
         end

@@ -112,12 +112,16 @@ function JumpAmount(key, mode)
     local aftDist = vim.api.nvim_buf_line_count(0) - vim.fn.line("'>") -- btn end of selection and Bot
     if key == "j" then -- vertical down
         dist = vim.api.nvim_win_get_height(0)
-        if mode == "v" and dist > aftDist + 4 then -- check if dist exceeds jumpable interval
+        -- check if we're jumping in visual mode
+        -- and dist exceeds jumpable interval, why 4? it just worked!
+        if mode == "v" and dist > aftDist + 4 then
             dist = aftDist + 4
         end
     elseif key == "k" then --vertical up
         dist = vim.api.nvim_win_get_height(0)
-        if mode == "v" and dist > befDist + 3 then -- check if dist exceeds jumpable interval
+        -- check if we're jumping in visual mode
+        -- and dist exceeds jumpable interval, why 3? because 4-1 :)
+        if mode == "v" and dist > befDist + 3 then
             dist = befDist + 3
         end
     elseif key == "h" or key == "l" then -- horizontal left right

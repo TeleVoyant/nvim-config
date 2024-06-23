@@ -92,6 +92,8 @@ return require("packer").startup(function(use)
         requires = {
             -- Autocompletion
             { "hrsh7th/nvim-cmp" }, -- Required
+            { "hrsh7th/cmp-path" }, -- nvim-cmp dependency for directory path
+            { "hrsh7th/cmp-git" }, -- nvim-cmp dependency for git resolution
             { "onsails/lspkind.nvim" }, -- Completion Icons, optional (necessary)
             { "hrsh7th/cmp-nvim-lsp" }, -- the glue, Required
             -- LSP Support

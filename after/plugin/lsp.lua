@@ -135,10 +135,10 @@ lsp.on_attach(function(foobar, bufnr)
         vim.diagnostic.open_float()
     end, opts)
     vim.keymap.set("n", "[d", function()
-        vim.diagnostic.goto_next()
+        vim.diagnostic.goto_prev()
     end, opts)
     vim.keymap.set("n", "]d", function()
-        vim.diagnostic.goto_prev()
+        vim.diagnostic.goto_next()
     end, opts)
     vim.keymap.set({ "n", "v" }, "<leader>vca", function()
         vim.lsp.buf.code_action()
@@ -154,11 +154,25 @@ lsp.on_attach(function(foobar, bufnr)
     end, opts)
 end)
 
+-- Highlight entire line for errors
+-- Highlight the line number for warnings
 -- to show icons on the error column instead of E, W, H, I
-vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError" })
-vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn" })
-vim.fn.sign_define("DiagnosticSignInfo", { text = "ⓘ", texthl = "DiagnosticSignInfo" })
-vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
+vim.diagnostic.config({
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = "",
+            [vim.diagnostic.severity.WARN] = "",
+            [vim.diagnostic.severity.INFO] = "ⓘ",
+            [vim.diagnostic.severity.HINT] = "",
+        },
+        linehl = {
+            [vim.diagnostic.severity.ERROR] = "ErrorMsg",
+        },
+        numhl = {
+            [vim.diagnostic.severity.WARN] = "WarningMsg",
+        },
+    },
+})
 
 -- extend lsp to nvim-cmp
 lsp.extend_cmp()
@@ -168,6 +182,7 @@ lsp.extend_cmp()
 -- nvim-cmp configurations follow after lsp-zero --
 -- --------------------------------------------- --
 -- --------------------------------------------- --
+require("cmp_git").setup() -- initialize cmp_git
 local cmp = require("cmp")
 local types = require("cmp.types")
 local str = require("cmp.utils.str")
@@ -205,9 +220,6 @@ cmp.setup({
             before = function(entry, vim_item)
                 -- Get the full snippet (and only keep first line)
                 local word = entry:get_insert_text()
-                if entry.completion_item.insertTextFormat == types.lsp.InsertTextFormat.Snippet then
-                    word = vim.lsp.util.parse_snippet(word)
-                end
                 word = str.oneline(word)
 
                 -- concatenates the string
@@ -289,7 +301,7 @@ cmp.setup({
         { name = "nvim_lsp" },
         { name = "buffer", keyword_length = 5, max_item_count = 5 },
         { name = "path" },
-        --{ name = "cmp_git" },
+        { name = "git" },
     },
 
     experimental = {

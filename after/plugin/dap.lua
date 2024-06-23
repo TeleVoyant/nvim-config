@@ -1,9 +1,13 @@
 local dap = require("dap")
 local dapui = require("dapui")
 local dapVT = require("nvim-dap-virtual-text")
+-- local nio = require("nio")
 
 -- setup dap ui
 dapui.setup()
+
+-- setup nio
+-- nio.run()
 
 -- setup dap virtual text
 dapVT.setup({
@@ -24,7 +28,8 @@ dapVT.setup({
     --- @param options nvim_dap_virtual_text_options Current options for nvim-dap-virtual-text
     --- @return string|nil A text how the virtual text should be displayed or nil, if this variable shouldn't be displayed
 
-    -- This just tries to mitigate the chance that I leak secret tokens here.
+    -- ---------- CUSTOM FUNCTION --------------- --
+    -- This just tries to mitigate the chance that I leak secret tokens while streaming.
     display_callback = function(variable, buf, stackframe, node, options)
         local name = string.lower(variable.name)
         local value = string.lower(variable.value)
@@ -50,6 +55,7 @@ dapVT.setup({
             end
         end
     end,
+    -- --------------------------------------- --
 
     -- position of virtual text, see `:h nvim_buf_set_extmark()`, default tries to inline the virtual text. Use 'eol' to set to end of line
     virt_text_pos = vim.fn.has("nvim-0.10") == 1 and "inline" or "eol",
@@ -73,13 +79,13 @@ end
 dap.listeners.before.event_exited.dapui_config = function()
     dapui.close()
 end
-dapui.float_element({ "width", 50 }, { "height", "30" })
+dapui.float_element(nil, { { "width", 50 }, { "height", "30" } })
 
 --------------------------------------------
 -- -------- keymaps are set here -------- --
 --------------------------------------------
-vim.keymap.set("n", "<leader>tb", dap.toogle_breakpoint)
-vim.keymap.set("n", "<leader>tB", dap.toogle_breakpoint)
+vim.keymap.set("n", "<leader>tb", dap.toggle_breakpoint)
+vim.keymap.set("n", "<leader>tB", dap.set_breakpoint)
 -- eval under cursor
 vim.keymap.set("n", "<leader>T", function()
     dapui.eval(nil, { enter = true })
@@ -91,3 +97,37 @@ vim.keymap.set("n", "<leader>tv", dap.restart)
 vim.keymap.set("n", "<leader>tn", dap.step_into)
 vim.keymap.set("n", "<leader>tm", dap.step_over)
 vim.keymap.set("n", "<leader>t,", dap.step_out)
+vim.keymap.set({ "n", "v" }, "<Leader>th", function()
+    require("dap.ui.widgets").hover()
+end)
+vim.keymap.set({ "n", "v" }, "<Leader>tp", function()
+    require("dap.ui.widgets").preview()
+end)
+vim.keymap.set("n", "<Leader>tf", function()
+    local widgets = require("dap.ui.widgets")
+    widgets.centered_float(widgets.frames)
+end)
+vim.keymap.set("n", "<Leader>ts", function()
+    local widgets = require("dap.ui.widgets")
+    widgets.centered_float(widgets.scopes)
+end)
+-- -------------------------------------- --
+
+-- -------------------------------------- --
+-- ----- PER-LANGUAGE DEBUG ADAPTERS ---- --
+-- -------------------------------------- --
+
+-- --- PHP debug adapter --- ---
+dap.adapters.php = {
+    type = "executable",
+    command = "node",
+    args = { "~/.local/share/nvim/mason/packages/php-debug-adapter/extension/out/phpDebug.js" },
+}
+dap.configurations.php = {
+    {
+        type = "php",
+        request = "launch",
+        name = "Listen for Xdebug",
+        port = 9000,
+    },
+}

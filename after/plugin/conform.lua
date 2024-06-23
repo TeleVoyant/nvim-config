@@ -17,11 +17,12 @@ require("conform").setup({
         cpp = { "clang-format" },
         c = { "clang-format" },
         java = { "clang-format" },
+        php = { "phpcbf" },
         -- Use the "*" filetype to run formatters on all filetypes.
-        ["*"] = { "codespell", "trim_whitespace" },
+        ["*"] = { "trim_whitespace" },
         -- Use the "_" filetype to run formatters on filetypes that don't
         -- have other formatters configured.
-        ["_"] = { "trim_whitespace" },
+        -- ["_"] = { "trim_whitespace" },
     },
     -- If this is set, Conform will run the formatter asynchronously after save.
     -- It will pass the table to conform.format().
