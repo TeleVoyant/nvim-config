@@ -69,6 +69,8 @@ require("mason-lspconfig").setup({
         "dockerls",
         "docker_compose_language_service",
         "bashls",
+        "elixirls",
+        "erlangls",
     },
     handlers = {
         lsp.default_setup,

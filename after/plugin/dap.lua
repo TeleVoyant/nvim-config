@@ -117,7 +117,8 @@ end)
 -- ----- PER-LANGUAGE DEBUG ADAPTERS ---- --
 -- -------------------------------------- --
 
--- --- PHP debug adapter --- ---
+-- ------------------------- --
+-- --- PHP debug adapter --- --
 dap.adapters.php = {
     type = "executable",
     command = "node",
@@ -129,5 +130,102 @@ dap.configurations.php = {
         request = "launch",
         name = "Listen for Xdebug",
         port = 9000,
+    },
+}
+
+-- ---------------------------- --
+-- --- Elixir debug adapter --- --
+dap.adapters.mix_task = {
+    type = "executable",
+    command = "~/.local/share/nvim/mason/packages/elixir-ls/debug_adapter.sh", -- debug_adapter.bat for windows
+    args = {},
+}
+dap.configurations.elixir = {
+    {
+        type = "mix_task",
+        name = "mix test",
+        task = "test",
+        taskArgs = { "--trace" },
+        request = "launch",
+        startApps = true, -- for Phoenix projects
+        projectDir = "${workspaceFolder}",
+        requireFiles = {
+            "test/**/test_helper.exs",
+            "test/**/*_test.exs",
+        },
+    },
+}
+
+-- ------------------------------------------ --
+-- --- C/C++/Rust debug adapter (via GDB) --- --
+dap.adapters.gdb = {
+    type = "executable",
+    command = "gdb",
+    args = { "-i", "dap" },
+}
+dap.configurations.c = {
+    {
+        name = "Launch",
+        type = "gdb",
+        request = "launch",
+        program = function()
+            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+        end,
+        cwd = "${workspaceFolder}",
+        stopAtBeginningOfMainSubprogram = false,
+    },
+}
+
+-- -------------------------- --
+-- --- Bash debug adapter --- --
+dap.adapters.bashdb = {
+    type = "executable",
+    command = vim.fn.stdpath("data") .. "~/.local/share/nvim/mason/packages/bash-debug-adapter/bash-debug-adapter",
+    name = "bashdb",
+}
+dap.configurations.sh = {
+    {
+        type = "bashdb",
+        request = "launch",
+        name = "Launch file",
+        showDebugOutput = true,
+        pathBashdb = vim.fn.stdpath("data")
+            .. "~/.local/share/nvim/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb",
+        pathBashdbLib = vim.fn.stdpath("data")
+            .. "~/.local/share/nvim/mason/packages/bash-debug-adapter/extension/bashdb_dir",
+        trace = true,
+        file = "${file}",
+        program = "${file}",
+        cwd = "${workspaceFolder}",
+        pathCat = "cat",
+        pathBash = "/bin/bash",
+        pathMkfifo = "mkfifo",
+        pathPkill = "pkill",
+        args = {},
+        env = {},
+        terminalKind = "integrated",
+    },
+}
+
+-- ---------------------------- --
+-- ---- Dart debug adapter ---- --
+dap.configurations.dart = {
+    {
+        type = "dart",
+        request = "launch",
+        name = "Launch dart",
+        dartSdkPath = "/run/current-system/sw/bin/dart", -- ensure this is correct
+        flutterSdkPath = "/run/current-system/sw/bin/flutter", -- ensure this is correct
+        program = "${workspaceFolder}/lib/main.dart", -- ensure this is correct
+        cwd = "${workspaceFolder}",
+    },
+    {
+        type = "flutter",
+        request = "launch",
+        name = "Launch flutter",
+        dartSdkPath = "/run/current-system/sw/bin/dart", -- ensure this is correct
+        flutterSdkPath = "/run/current-system/sw/bin/flutter", -- ensure this is correct
+        program = "${workspaceFolder}/lib/main.dart", -- ensure this is correct
+        cwd = "${workspaceFolder}",
     },
 }
