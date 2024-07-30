@@ -11,6 +11,7 @@ lint.linters_by_ft = {
     c = { "cpplint" },
     vim = { "vint" },
     php = { "phpstan", "phpcs" },
+    yaml = { "yamllint" },
 }
 
 vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {

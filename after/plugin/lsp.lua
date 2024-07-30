@@ -16,6 +16,18 @@ require("fidget").setup({
             done_ttl = 2, -- How long a message should persist after completion
         },
     },
+
+    notification = {
+        -- Options related to how notifications are rendered as text
+        view = {
+            group_separator_hl = "Comment",
+        },
+        -- Options related to the notification window and buffer
+        window = {
+            normal_hl = "Comment", -- Base highlight group in the notification window
+            winblend = 0, -- Background color opacity in the notification window (zero to follow neovim theme)
+        },
+    },
 })
 -- ---------------------------------------- --
 
