@@ -29,6 +29,7 @@ return require("packer").startup(function(use)
         config = function()
             vim.cmd("colorscheme rose-pine")
         end,
+        requires = { "f-person/auto-dark-mode.nvim" },
     })
 
     -- the only finder you will ever need --

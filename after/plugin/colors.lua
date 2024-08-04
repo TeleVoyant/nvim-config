@@ -1,9 +1,12 @@
+-- --------------------------- --
+-- ----- Rose-Pine Config ---- --
+-- --------------------------- --
 require("rose-pine").setup({
     disable_background = true,
     disable_float_background = false,
 
     variant = "auto", -- auto, main, moon, or dawn
-    dark_variant = "dawn", -- main, moon, or dawn
+    dark_variant = "moon", -- main, moon, or dawn
     dim_inactive_windows = false,
     extend_background_behind_borders = true,
 
@@ -68,13 +71,26 @@ require("rose-pine").setup({
     end,
 })
 
+-- --------------------------- --
+-- -- Auto-Dark-Mode Config -- --
+-- --------------------------- --
+require("auto-dark-mode").setup({
+    update_interval = 1000,
+    set_dark_mode = function()
+        vim.api.nvim_set_option_value("background", "dark", {})
+        ColorMyPencils()
+    end,
+    set_light_mode = function()
+        vim.api.nvim_set_option_value("background", "light", {})
+        ColorMyPencils()
+    end,
+})
+
 -- Gets called from the packer plugin initalizer
 function ColorMyPencils(color)
     color = color or "rose-pine"
     vim.cmd.colorscheme(color)
-
+    -- CUSTOM BG COLOR
     -- vim.api.nvim_set_hl(0, "Normal", { bg = "#0a0a0a" })
     -- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#141414" })
 end
-
-ColorMyPencils()
