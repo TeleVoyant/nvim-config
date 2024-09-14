@@ -5,7 +5,7 @@ vim.cmd([[packadd packer.nvim]])
 
 -- ---------------------------------------------- --
 -- ---------------------------------------------- --
--- ----- A TOTAL OF 25 PLUGINS! SHEEEEESH! ------ --
+-- ----- A TOTAL OF 30 PLUGINS! SHEEEEESH! ------ --
 -- ---------------------------------------------- --
 -- ---------------------------------------------- --
 return require("packer").startup(function(use)
@@ -27,10 +27,10 @@ return require("packer").startup(function(use)
         "rose-pine/neovim",
         as = "rose-pine",
         config = function()
-            vim.cmd("colorscheme rose-pine")
+            vim.cmd.colorscheme("rose-pine")
         end,
-        requires = { "f-person/auto-dark-mode.nvim" },
     })
+    use("f-person/auto-dark-mode.nvim")
 
     -- the only finder you will ever need --
     use({
@@ -105,11 +105,13 @@ return require("packer").startup(function(use)
             -- Snippets
             { "L3MON4D3/LuaSnip" }, -- Required
             -- Formatters
-            { "stevearc/conform.nvim" }, -- Optional (necessary)
+            { "stevearc/conform.nvim" }, -- Optional
             -- Linters
-            { "mfussenegger/nvim-lint" }, -- Optional (necessary)
+            { "mfussenegger/nvim-lint" }, -- Optional
             -- LSP Notifications
             { "j-hui/fidget.nvim" }, -- Optional
+            -- generate a proper documentation skeleton
+            { "danymat/neogen" }, -- Optional
         },
     })
     -- ---------------------------------- --
@@ -127,9 +129,23 @@ return require("packer").startup(function(use)
             { "theHamsta/nvim-dap-virtual-text" },
             -- DAP store
             { "williamboman/mason.nvim" },
+            -- Go DAP
+            { "leoluz/nvim-dap-go" },
+            -- Python DAP
+            { "mfussenegger/nvim-dap-python" },
         },
     })
 
+    -- -------------------------------- --
+    -- ---- documentaion generator ---- --
+    use({
+        "danymat/neogen",
+        config = function()
+            require("neogen").setup({})
+        end,
+        -- Uncomment next line if you want to follow only stable versions
+        -- tag = "*"
+    })
     -- ----------------------------------- --
     -- pretty list showing all the troubles --
     use({

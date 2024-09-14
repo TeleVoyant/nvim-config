@@ -56,15 +56,11 @@ vim.keymap.set("v", "<leader>d", '"_d')
 -- <ESC> is a bit out of reach!
 vim.keymap.set("i", "<C-c>", "<Esc>")
 
--- don't ever press capital "q"!
--- why? TODO: find out
-vim.keymap.set("n", "Q", "<nop>")
-
 -- using tmux to switch between projects
 -- you need tmux for this!
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 
-vim.keymap.set("n", "<leader>f", function()
+vim.keymap.set("n", "<leader>=", function()
     vim.lsp.buf.format()
 end)
 
@@ -79,7 +75,7 @@ vim.keymap.set("n", "<leader>sc", ":%s/\\\\+/___/g<Left><Left><Left><Left><Left>
 vim.keymap.set("v", "<leader>sc", ":s/\\\\+/___/g<Left><Left><Left><Left><Left><Left><Left><Left>")
 
 -- makes scripts executable ( using command chmod +x $filename.$fileext )
-vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+vim.keymap.set("n", "<leader>mx", "<cmd>!chmod +x %<CR>", { silent = true })
 
 -- Undo and redo just like back and fwd from browser vimium c
 -- more of the vimium c tab management remaps are done in barbar.lua
@@ -105,11 +101,14 @@ vim.keymap.set("v", "<C-k>", ':lua vim.cmd(":\'<,\'>m .-" .. JumpAmount("k", "v"
 ----------------------------------------------------------
 
 -- JUMPING DIST CALCULATOR --
--- Jumps depending on window height and width
+--- Jumps depending on mode, window height and width
+---@param key string: determines direction of jump (h, j, k, l)
+---@param mode string: determines if we are in normal mode or visual
+---@return integer: returns precalculated jump amount
 function JumpAmount(key, mode)
     local dist
-    local befDist = vim.fn.line("'<") -- btn Top and start of selection
-    local aftDist = vim.api.nvim_buf_line_count(0) - vim.fn.line("'>") -- btn end of selection and Bot
+    local befDist = vim.fn.line("'<") -- btn Top and 'start of selection'
+    local aftDist = vim.api.nvim_buf_line_count(0) - vim.fn.line("'>") -- btn 'end of selection' and Bot
     if key == "j" then -- vertical down
         dist = vim.api.nvim_win_get_height(0)
         -- check if we're jumping in visual mode
@@ -131,4 +130,5 @@ function JumpAmount(key, mode)
     end
     return math.floor(dist / 1.5)
 end
+
 -- end JUMPING DIST CALCULATOR --

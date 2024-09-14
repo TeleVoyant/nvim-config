@@ -12,7 +12,15 @@ lint.linters_by_ft = {
     vim = { "vint" },
     php = { "phpstan", "phpcs" },
     yaml = { "yamllint" },
+    html = { "htmlhint" },
+    sh = { "shellcheck" },
 }
+
+-- SPECIAL CASE (PYLINT IS ANNOYING) --
+lint.linters.pylint = require("lint.util").wrap(lint.linters.pylint, function(diagnostic)
+    diagnostic.severity = vim.diagnostic.severity.HINT
+    return diagnostic
+end)
 
 vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
     callback = function()

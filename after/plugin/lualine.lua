@@ -172,6 +172,61 @@ ins_left({
 
 -- Add components to right sections
 ins_right({
+    --- computes the formatters and linters on current file on buffer
+    function()
+        local formatters = require("conform").list_formatters_for_buffer()
+        local total_formatters = " ✎"
+        local linters = require("lint").get_running()
+        local total_linters = " 󱉶 "
+        local count = 0
+
+        if #linters == 0 then
+            return "󰦕 "
+        else
+            if #formatters == 0 then
+                -- if only linters are found
+                for _, linter in ipairs(linters) do
+                    -- grab linters active (yes, there may be more than one per file, per neovim session)
+                    if count == 0 then
+                        total_linters = total_linters .. " " .. linter:gsub("_", " ") -- append
+                    else
+                        total_linters = total_linters .. ", .. " -- append
+                    end
+                    count = count + 1
+                end
+                return total_linters -- actual data to be printed
+            else
+                -- if both linters and formatters are found
+                -- compute linters
+                for _, linter in ipairs(linters) do
+                    -- grab linters active (yes, there may be more than one per file, per neovim session)
+                    if count == 0 then
+                        total_linters = total_linters .. " " .. linter:gsub("_", " ") -- append
+                    else
+                        total_linters = total_linters .. ", .. " -- append
+                        break
+                    end
+                    count = count + 1
+                end
+                count = 0 -- reset counter for next iteration
+                -- then compute formatters
+                for _, formatter in ipairs(formatters) do
+                    -- grab formatters active (yes, there may be more than one per file, per neovim session)
+                    if count == 0 then
+                        total_formatters = total_formatters .. " " .. formatter:gsub("_", " ") -- append
+                    else
+                        total_formatters = total_formatters .. ", .. " -- append
+                        break
+                    end
+                    count = count + 1
+                end
+                return total_formatters .. "𝩺𝩺 " .. total_linters -- actual data to be printed
+            end
+        end
+    end,
+})
+
+ins_right({
     "o:encoding", -- option component same as &encoding in viml
     fmt = string.upper, -- I'm not sure why it's upper case either ;)
     cond = conditions.hide_in_width,

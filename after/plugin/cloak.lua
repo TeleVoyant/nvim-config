@@ -1,4 +1,6 @@
-require("cloak").setup({
+local cloak = require("cloak")
+
+cloak.setup({
     enabled = true,
     cloak_character = "⁑",
     -- The applied highlight group (colors) on the cloaking, see `:h highlight`.
@@ -7,7 +9,11 @@ require("cloak").setup({
     -- patterns, defaults to the length of the matched pattern.
     cloak_length = nil, -- Provide a number if you want to hide the true length of the value.
     -- Wether it should try every pattern to find the best fit or stop after the first.
-    try_all_patterns = true,
+    -- try_all_patterns = true,
+    -- Set to true to cloak Telescope preview buffers. (Required feature not in 0.1.x)
+    cloak_telescope = true,
+    -- Re-enable cloak when a matched buffer leaves the window.
+    cloak_on_leave = false,
     patterns = {
         {
             -- Match any file starting with '.env'.
@@ -25,3 +31,8 @@ require("cloak").setup({
         },
     },
 })
+
+-- ------------------------ --
+-- --- cloaking keymaps --- --
+vim.keymap.set("n", "<leader>ct", cloak.toggle)
+vim.keymap.set("n", "<leader>cp", cloak.uncloak_line)

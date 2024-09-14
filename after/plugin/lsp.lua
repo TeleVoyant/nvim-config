@@ -1,5 +1,5 @@
 -- reserve space for diagnostic icons
-vim.opt.signcolumn = "yes"
+-- vim.opt.signcolumn = "yes"
 
 -- ------------------------------------- --
 -- lsp-zero configurations are down here --
@@ -7,7 +7,7 @@ vim.opt.signcolumn = "yes"
 local lsp = require("lsp-zero").preset({})
 
 -- ---------------------------------------- --
--- lsp notifications will be processed here
+-- lsp notifications will be processed here --
 require("fidget").setup({
     progress = {
         -- how LSP progress messages are displayed as notifications
@@ -52,6 +52,7 @@ require("mason-tool-installer").setup({
         "cpplint",
         "clang-format",
         "vint",
+        "xmlformatter",
     },
 })
 require("mason-lspconfig").setup({
@@ -71,6 +72,7 @@ require("mason-lspconfig").setup({
         "bashls",
         "elixirls",
         "erlangls",
+        "lemminx",
     },
     handlers = {
         lsp.default_setup,
@@ -80,43 +82,49 @@ require("mason-lspconfig").setup({
         end,
     },
 })
--- ---------------------------------- --
--- ---------------------------------- --
 
+-- ---------------------------------- --
+-- --------- LSP-ZERO SETUP --------- --
+-- ---------------------------------- --
 local cmp_action = require("lsp-zero").cmp_action()
 
 lsp.on_attach(function(foobar, bufnr)
     -- -------------------------------------------------------------- --
     -- Display language server(s) that are loaded, on the prompt-line --
-    local clients = vim.lsp.get_clients()
-    local total_clients = ""
-    local count = 0
-    for _, client in ipairs(clients) do
-        -- grab clients active (yes, there may be more than one per file, per noevim session)
-        if count == 0 then
-            total_clients = total_clients .. " 󰂓 " .. client.name:gsub("_", " ") -- append
-        else
-            total_clients = total_clients .. ", 󰂓 " .. client.name:gsub("_", " ") -- append
+    local function get_active_lsps()
+        local clients = vim.lsp.get_clients()
+        local total_clients = ""
+        local count = 0
+        if #clients > 0 then -- if there is at least one client
+            for _, client in ipairs(clients) do
+                -- grab clients active (yes, there may be more than one per file, per noevim session)
+                if count == 0 then
+                    total_clients = total_clients .. " 󰂓 " .. client.name:gsub("_", " ") -- append
+                else
+                    total_clients = total_clients .. ", 󰂓 " .. client.name:gsub("_", " ") -- append
+                end
+                count = count + 1
+            end
+            -- display captured language servers appropriately
+            if count < 2 then -- if there is one active
+                return total_clients .. " server active"
+            elseif count > 4 then -- if they are five or more active, collapse the list. display two only
+                return total_clients:sub(1, total_clients:find(",", 1, true))
+                    .. total_clients:sub(
+                        total_clients:find(",", 1, true) + 1,
+                        total_clients:find(",", total_clients:find(",", 1, true) + 1, true) - 1
+                    )
+                    .. " and "
+                    .. count - 2
+                    .. " other servers active"
+            else -- if there is more than one active
+                return total_clients .. " servers active"
+            end
+        else -- if there is no client
+            return " No LSP Server Active"
         end
-        count = count + 1
     end
-    -- display captured language servers appropriately
-    if count < 2 then -- if there is one active
-        print(total_clients .. " server active")
-    elseif count > 4 then -- if they are five or more active, collapse the list. display two only
-        print(
-            total_clients:sub(1, total_clients:find(",", 1, true))
-                .. total_clients:sub(
-                    total_clients:find(",", 1, true) + 1,
-                    total_clients:find(",", total_clients:find(",", 1, true) + 1, true) - 1
-                )
-                .. " and "
-                .. count - 2
-                .. " other servers active"
-        )
-    else -- if there is more than one active
-        print(total_clients .. " servers active")
-    end
+    vim.notify_once(get_active_lsps(), vim.log.levels.INFO, { silent = true })
     -- -------------------------------------------------------------- --
 
     -- lsp keymaps
@@ -192,14 +200,14 @@ vim.diagnostic.config({
 lsp.extend_cmp()
 
 -- --------------------------------------------- --
--- --------------------------------------------- --
+-- ---- AUTO-COMPLETE DIALOG CONFIGURATION ----- --
 -- nvim-cmp configurations follow after lsp-zero --
--- --------------------------------------------- --
 -- --------------------------------------------- --
 require("cmp_git").setup() -- initialize cmp_git
 local cmp = require("cmp")
 local types = require("cmp.types")
 local str = require("cmp.utils.str")
+local neogen = require("neogen")
 
 local t = function(str)
     return vim.api.nvim_replace_termcodes(str, true, true, true)
@@ -268,6 +276,8 @@ cmp.setup({
             -- fallback() should release the key if completion is not visible
             if cmp.visible() then
                 cmp.select_next_item({ behavior = cmp.SelectBehavior, count = 1 })
+            elseif neogen.jumpable() then
+                neogen.jump_next()
             else
                 fallback()
             end
@@ -277,6 +287,8 @@ cmp.setup({
             -- fallback() should release the key if completion is not visible
             if cmp.visible() then
                 cmp.select_prev_item({ behavior = cmp.SelectBehavior, count = 1 })
+            elseif neogen.jumpable(true) then
+                neogen.jump_prev()
             else
                 fallback()
             end

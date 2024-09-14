@@ -1,4 +1,6 @@
 -- this file will set all necessary options required
+-- obviously
+vim.opt.termguicolors = true
 
 -- space as leader key
 vim.g.mapleader = " "
@@ -28,9 +30,6 @@ vim.opt.undofile = true
 -- do not HighLight search, disgusting
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
-
--- obviously
-vim.opt.termguicolors = true
 
 vim.opt.scrolloff = 9
 

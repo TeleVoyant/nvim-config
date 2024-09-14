@@ -21,9 +21,7 @@ require("hex").setup({
 ---------------
 -- Remappings--
 ---------------
-local map = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
-
-map("n", "<leader>hx", "<Cmd>HexToggle<CR>", opts)
-map("n", "<leader>hd", "<Cmd>HexDump<CR>", opts)
-map("n", "<leader>ha", "<Cmd>HexAssemble<CR>", opts)
+vim.keymap.set("n", "<leader>hx", "<Cmd>HexToggle<CR>", opts)
+vim.keymap.set("n", "<leader>hd", "<Cmd>HexDump<CR>", opts)
+vim.keymap.set("n", "<leader>ha", "<Cmd>HexAssemble<CR>", opts)
