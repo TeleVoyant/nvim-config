@@ -30,7 +30,10 @@ return require("packer").startup(function(use)
             vim.cmd.colorscheme("rose-pine")
         end,
     })
-    use("f-person/auto-dark-mode.nvim")
+    use({
+        "f-person/auto-dark-mode.nvim",
+        commit = "76d9ba9b305e492169611cc3ebf5f976c5d6cada",
+    })
 
     -- the only finder you will ever need --
     use({
@@ -199,7 +202,10 @@ return require("packer").startup(function(use)
     })
 
     -- for all the indents and space highlightings --
-    use("lukas-reineke/indent-blankline.nvim")
+    use({
+        "lukas-reineke/indent-blankline.nvim",
+        commit = "e7a4442e055ec953311e77791546238d1eaae507",
+    })
 
     -- for comments --
     use({
@@ -218,6 +224,15 @@ return require("packer").startup(function(use)
         tag = "*", -- Use for stability; omit to use `main` branch for the latest features
         config = function()
             require("nvim-surround").setup()
+        end,
+    })
+
+    -- improve viewing Markdown files in Neovim
+    use({
+        "MeanderingProgrammer/render-markdown.nvim",
+        after = { "nvim-treesitter" },
+        config = function()
+            require("render-markdown").setup({})
         end,
     })
 

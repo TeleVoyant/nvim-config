@@ -173,6 +173,11 @@ ins_left({
 -- Add components to right sections
 ins_right({
     --- computes the formatters and linters on current file on buffer
+    --- table formatters print is tied to linters presence
+    --- simply because, formatters table is always occupied,
+    --- while linters table is occupied only on save.
+    --- this makes status line less cluttered
+    --- @return string
     function()
         local formatters = require("conform").list_formatters_for_buffer()
         local total_formatters = " ✎"

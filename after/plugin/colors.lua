@@ -11,7 +11,9 @@ require("auto-dark-mode").setup({
         vim.api.nvim_set_option_value("background", "light", {})
         ColorMyPencils()
     end,
+    toggle_keymap = "<leader>dc",
 })
+require("auto-dark-mode").toggle_opposite_mode_once()
 
 -- --------------------------- --
 -- ----- Rose-Pine Config ---- --

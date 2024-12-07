@@ -41,18 +41,25 @@ require("mason").setup({
 })
 require("mason-tool-installer").setup({
     ensure_installed = {
-        "prettier",
+        "prettierd",
         "stylua",
         "isort",
         "black",
         "codespell",
         "goimports",
         "eslint_d",
+        "phpcbf",
+        "phpstan",
+        "phpcs",
         "pylint",
         "cpplint",
+        "yamllint",
+        "htmlhint",
+        "shellcheck",
         "clang-format",
         "vint",
         "xmlformatter",
+        "shfmt",
     },
 })
 require("mason-lspconfig").setup({
@@ -276,6 +283,7 @@ cmp.setup({
             -- fallback() should release the key if completion is not visible
             if cmp.visible() then
                 cmp.select_next_item({ behavior = cmp.SelectBehavior, count = 1 })
+            -- for neogen auto completion
             elseif neogen.jumpable() then
                 neogen.jump_next()
             else
@@ -287,6 +295,7 @@ cmp.setup({
             -- fallback() should release the key if completion is not visible
             if cmp.visible() then
                 cmp.select_prev_item({ behavior = cmp.SelectBehavior, count = 1 })
+            -- for neogen auto completion
             elseif neogen.jumpable(true) then
                 neogen.jump_prev()
             else

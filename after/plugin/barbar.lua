@@ -59,7 +59,10 @@ require("barbar").setup({
             -- Requires `nvim-web-devicons` if `true`
             enabled = true,
         },
-        separator = { left = "▎⧚ ", right = "" },
+        separator = { left = "▎⧚", right = "" },
+
+        -- If true, add an additional separator at the end of the buffer list
+        separator_at_end = true,
 
         -- Configure the icons on the bufferline when modified or pinned.
         -- Supports all the base icon options.
@@ -69,8 +72,8 @@ require("barbar").setup({
         -- Configure the icons on the bufferline based on the visibility of a buffer.
         -- Supports all the base icon options, plus `modified` and `pinned`.
         alternate = { filetype = { enabled = false } },
-        current = { buffer_index = true },
-        inactive = { button = "×" },
+        current = { buffer_index = false },
+        inactive = { button = "⤬" },
         visible = { modified = { buffer_number = false } },
     },
 
@@ -93,6 +96,19 @@ require("barbar").setup({
     -- already assigned, the behavior is to assign letters in order of
     -- usability (see order below)
     semantic_letters = false,
+
+    -- Set the filetypes which barbar will offset itself for
+    sidebar_filetypes = {
+        -- specify the text used for the offset:
+        undotree = {
+            text = "undotree",
+            align = "center", -- *optionally* specify an alignment (either 'left', 'center', or 'right')
+        },
+        -- Or, specify the event which the sidebar executes when leaving:
+        ["neo-tree"] = { event = "BufWipeout" },
+        -- Or, specify all three
+        Outline = { event = "BufWinLeave", text = "symbols-outline", align = "right" },
+    },
 
     -- New buffer letters are assigned in this order. This order is
     -- optimal for the qwerty keyboard layout but might need adjustement
