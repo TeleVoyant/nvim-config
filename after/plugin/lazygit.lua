@@ -13,3 +13,4 @@ vim.g.lazygit_on_exit_callback = nil -- optional function callback when exiting 
 
 -- lazygit keymaps --
 vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", { silent = true })
+vim.keymap.set("n", "<leader>gc", ":LazyGitFilterCurrentFile<CR>", { silent = true })
