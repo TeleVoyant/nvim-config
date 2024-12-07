@@ -190,7 +190,16 @@ return require("packer").startup(function(use)
     use("mbbill/undotree")
 
     -- forgot what this does... oooh remembered! its for Git in neovim :) --
-    use("tpope/vim-fugitive")
+    -- use("tpope/vim-fugitive")
+    -- sorry tpope, lazygit FTW
+    use({
+        "kdheepak/lazygit.nvim",
+        -- optional for floating window border decoration
+        requires = {
+            "nvim-lua/plenary.nvim",
+            "nvim-lua/plenary.nvim",
+        },
+    })
     use("lewis6991/gitsigns.nvim")
     use({
         "pwntester/octo.nvim",
