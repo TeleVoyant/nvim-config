@@ -38,6 +38,37 @@ require("fidget").setup({
 -- see :help lsp-zero-guide.customize-nvim-cmp
 require("mason").setup({
     PATH = "prepend", -- "skip" seems to cause the spawning error
+
+    ui = {
+        ---@since 1.0.0
+        -- The border to use for the UI window. Accepts same border values as |nvim_open_win()|.
+        -- border = "none",
+        border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+
+        ---@since 1.0.0
+        -- Width of the window. Accepts:
+        -- - Integer greater than 1 for fixed width.
+        -- - Float in the range of 0-1 for a percentage of screen width.
+        width = 0.8,
+
+        ---@since 1.0.0
+        -- Height of the window. Accepts:
+        -- - Integer greater than 1 for fixed height.
+        -- - Float in the range of 0-1 for a percentage of screen height.
+        height = 0.8,
+
+        icons = {
+            ---@since 1.0.0
+            -- The list icon to use for installed packages.
+            package_installed = "◍",
+            ---@since 1.0.0
+            -- The list icon to use for packages that are installing, or queued for installation.
+            package_pending = "◍",
+            ---@since 1.0.0
+            -- The list icon to use for packages that are not installed.
+            package_uninstalled = "◍",
+        },
+    },
 })
 require("mason-tool-installer").setup({
     ensure_installed = {
@@ -131,6 +162,7 @@ lsp.on_attach(function(foobar, bufnr)
             return " No LSP Server Active"
         end
     end
+    -- only notify once, and on new language server detection
     vim.notify_once(get_active_lsps(), vim.log.levels.INFO, { silent = true })
     -- -------------------------------------------------------------- --
 
