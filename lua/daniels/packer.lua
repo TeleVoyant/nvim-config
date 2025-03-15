@@ -132,6 +132,13 @@ return require("packer").startup(function(use)
             { "theHamsta/nvim-dap-virtual-text" },
             -- DAP store
             { "williamboman/mason.nvim" },
+
+            -- --- PER-LANGUAGE ASSISTS --- --
+            -- WHY? inspite of standardized LSP communication protocol,
+            -- every DAP has its own communication rules and triggers.
+            -- cause f*** you why not :)
+            -- Java DAP
+            { "mfussenegger/nvim-jdtls" },
             -- Go DAP
             { "leoluz/nvim-dap-go" },
             -- Python DAP
@@ -196,7 +203,6 @@ return require("packer").startup(function(use)
         "kdheepak/lazygit.nvim",
         -- optional for floating window border decoration
         requires = {
-            "nvim-lua/plenary.nvim",
             "nvim-lua/plenary.nvim",
         },
     })

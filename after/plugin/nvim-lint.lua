@@ -14,6 +14,7 @@ lint.linters_by_ft = {
     yaml = { "yamllint" },
     html = { "htmlhint" },
     sh = { "shellcheck" },
+    solidity = { "solhint" },
 }
 
 -- SPECIAL CASE (PYLINT IS ANNOYING) --

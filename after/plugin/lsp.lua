@@ -91,6 +91,7 @@ require("mason-tool-installer").setup({
         "vint",
         "xmlformatter",
         "shfmt",
+        "solhint",
     },
 })
 require("mason-lspconfig").setup({
@@ -111,11 +112,17 @@ require("mason-lspconfig").setup({
         "elixirls",
         "erlangls",
         "lemminx",
+        "pyright",
+        "jdtls",
+        "jsonls",
+        "ts_ls",
+        "solidity_ls_nomicfoundation",
+        "solidity_ls",
     },
     handlers = {
         lsp.default_setup,
         lua_ls = function()
-            -- (Optional) Configure lua language server for neovim
+            -- Configure lua language server for neovim
             require("lspconfig").lua_ls.setup(lsp.nvim_lua_ls())
         end,
     },
