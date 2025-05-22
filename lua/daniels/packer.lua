@@ -26,13 +26,14 @@ return require("packer").startup(function(use)
     use({
         "rose-pine/neovim",
         as = "rose-pine",
+        commit = "6b9840790cc7acdfadde07f308d34b62dd9cc675",
         config = function()
             vim.cmd.colorscheme("rose-pine")
         end,
     })
     use({
         "f-person/auto-dark-mode.nvim",
-        commit = "76d9ba9b305e492169611cc3ebf5f976c5d6cada",
+        --commit = "76d9ba9b305e492169611cc3ebf5f976c5d6cada",
     })
 
     -- the only finder you will ever need --
@@ -219,7 +220,7 @@ return require("packer").startup(function(use)
     -- for all the indents and space highlightings --
     use({
         "lukas-reineke/indent-blankline.nvim",
-        commit = "e7a4442e055ec953311e77791546238d1eaae507",
+        --commit = "e7a4442e055ec953311e77791546238d1eaae507",
     })
 
     -- for comments --

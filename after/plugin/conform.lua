@@ -22,6 +22,7 @@ conform.setup({
         php = { "phpcbf" },
         xml = { "xmlformatter" },
         sh = { "shfmt" },
+        asm = { "asmfmt" },
         -- Use the "*" filetype to run formatters on all filetypes.
         ["*"] = { "trim_whitespace" },
         -- Use the "_" filetype to run formatters on filetypes that don't

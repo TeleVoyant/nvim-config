@@ -91,7 +91,7 @@ ins_left({
 ins_left({
     -- mode component
     function()
-        return " ꧁⚞ "
+        return " ⚞󰬰󰙎 "
     end,
     color = function()
         -- auto change color according to neovims mode
@@ -225,7 +225,7 @@ ins_right({
                     end
                     count = count + 1
                 end
-                return total_formatters .. "𝩺𝩺 " .. total_linters -- actual data to be printed
+                return total_formatters .. "󰿊" .. total_linters -- actual data to be printed
             end
         end
     end,

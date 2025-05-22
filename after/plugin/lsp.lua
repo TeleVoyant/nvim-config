@@ -92,6 +92,7 @@ require("mason-tool-installer").setup({
         "xmlformatter",
         "shfmt",
         "solhint",
+        "asmfmt",
     },
 })
 require("mason-lspconfig").setup({
@@ -118,6 +119,7 @@ require("mason-lspconfig").setup({
         "ts_ls",
         "solidity_ls_nomicfoundation",
         "solidity_ls",
+        "asm_lsp",
     },
     handlers = {
         lsp.default_setup,

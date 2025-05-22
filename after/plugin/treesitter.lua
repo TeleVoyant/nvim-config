@@ -26,6 +26,7 @@ require("nvim-treesitter.configs").setup({
         "bash",
         "nix",
         "python",
+        "asm",
     },
 
     -- list of filetypes to ignore

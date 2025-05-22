@@ -41,3 +41,17 @@ vim.opt.isfname:append("@-@")
 vim.opt.updatetime = 50
 
 vim.opt.colorcolumn = "100"
+
+-- Enable 'list' mode to show invisible characters
+vim.opt.list = true
+
+-- Set custom symbols for various invisible characters
+vim.opt.listchars = {
+    tab = "→ ", -- Tabs will be shown as '→ '
+    -- space = "·", -- Spaces will appear as dots
+    trail = "·", -- Trailing spaces shown as bullet
+    eol = "¬", -- End of line shown as '¬'
+    extends = "»", -- Wrap indicator: line continues beyond right
+    precedes = "«", -- Wrap indicator: line continues before left
+    nbsp = "␣", -- Non-breaking space shown as open box
+}
