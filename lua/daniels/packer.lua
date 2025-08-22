@@ -178,6 +178,17 @@ return require("packer").startup(function(use)
     -- ----------------------------------- --
 
     -- ----------------------------------- --
+    -- -- Flutter/Dart tools for neovim -- --
+    use({
+        "nvim-flutter/flutter-tools.nvim",
+        requires = {
+            "nvim-lua/plenary.nvim",
+            "stevearc/dressing.nvim", -- optional for vim.ui.select
+        },
+    })
+    -- ----------------------------------- --
+
+    -- ----------------------------------- --
     -- -- for all the notes in the code -- --
     use({
         "epwalsh/obsidian.nvim",
@@ -192,8 +203,11 @@ return require("packer").startup(function(use)
     -- ----------------------------------- --
 
     -- switch btn files as fast as lightning --
-    use("theprimeagen/harpoon")
-
+    use({
+        "ThePrimeagen/harpoon",
+        branch = "harpoon2",
+        requires = { "nvim-lua/plenary.nvim" },
+    })
     -- open urls recognized on the current buffer
     use("axieax/urlview.nvim")
 
