@@ -6,7 +6,7 @@ lint.linters_by_ft = {
     typescript = { "eslint_d" },
     typescriptreact = { "eslint_d" },
     svelte = { "eslint_d" },
-    python = { "pylint" },
+    python = { "pylint", "ruff", "bandit" },
     cpp = { "cpplint" },
     c = { "cpplint" },
     vim = { "vint" },
@@ -15,6 +15,7 @@ lint.linters_by_ft = {
     html = { "htmlhint" },
     sh = { "shellcheck" },
     solidity = { "solhint" },
+    env = { "dotenv-linter" },
 }
 
 -- SPECIAL CASE (PYLINT IS ANNOYING) --

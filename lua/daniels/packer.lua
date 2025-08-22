@@ -26,10 +26,10 @@ return require("packer").startup(function(use)
     use({
         "rose-pine/neovim",
         as = "rose-pine",
-        commit = "6b9840790cc7acdfadde07f308d34b62dd9cc675",
-        config = function()
-            vim.cmd.colorscheme("rose-pine")
-        end,
+        -- commit = "6b9840790cc7acdfadde07f308d34b62dd9cc675",
+        -- config = function()
+        --     vim.cmd.colorscheme("rose-pine")
+        -- end,
     })
     use({
         "f-person/auto-dark-mode.nvim",
@@ -191,8 +191,11 @@ return require("packer").startup(function(use)
     })
     -- ----------------------------------- --
 
-    -- "GET OVER HEEEREE" switch btn files as fast as lightning --
+    -- switch btn files as fast as lightning --
     use("theprimeagen/harpoon")
+
+    -- open urls recognized on the current buffer
+    use("axieax/urlview.nvim")
 
     -- undo tree implementation for neovim --
     use("mbbill/undotree")

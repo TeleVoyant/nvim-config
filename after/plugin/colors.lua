@@ -11,7 +11,7 @@ require("auto-dark-mode").setup({
         vim.api.nvim_set_option_value("background", "light", {})
         ColorMyPencils()
     end,
-    fallback = "dark",
+    fallback = "light",
 })
 
 -- --------------------------- --
@@ -19,10 +19,10 @@ require("auto-dark-mode").setup({
 -- --------------------------- --
 require("rose-pine").setup({
     disable_background = true,
-    disable_float_background = true,
+    disable_float_background = false,
 
     -- force darktheme, as parrot does not support theme switching
-    variant = "moon", -- auto, main, moon, or dawn
+    variant = "dawn", -- auto, main, moon, or dawn
     dark_variant = "moon", -- main, moon, or dawn
     dim_inactive_windows = true,
     extend_background_behind_borders = true,
@@ -72,7 +72,7 @@ require("rose-pine").setup({
 
     highlight_groups = {
         -- Comment = { fg = "foam" },
-        -- StatusLine = { fg = "love", bg = "love", blend = 15 },
+        StatusLine = { fg = "love", bg = "love", blend = 5 },
         -- VertSplit = { fg = "muted", bg = "muted" },
         -- Visual = { fg = "base", bg = "text", inherit = false },
     },
