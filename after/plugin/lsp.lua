@@ -278,6 +278,7 @@ cmp.setup({
         completion = { winhighlight = "Normal:CmpNormal" },
         documentation = { winhighlight = "Normal:CmpDocNormal" },
     },
+
     -- formatings of nvim-cmp
     formatting = {
         fields = {
@@ -285,7 +286,7 @@ cmp.setup({
             cmp.ItemField.Abbr,
             cmp.ItemField.Menu,
         },
-        format = require("lspkind").cmp_format({
+        format = lspkind.cmp_format({
             mode = "symbol",
             before = function(entry, vim_item)
                 -- Get the full snippet (and only keep first line)
@@ -330,7 +331,7 @@ cmp.setup({
             else
                 fallback()
             end
-        end),
+        end, { "i", "s" }),
 
         ["<C-k>"] = cmp.mapping(function(fallback)
             -- fallback() should release the key if completion is not visible
@@ -342,7 +343,7 @@ cmp.setup({
             else
                 fallback()
             end
-        end),
+        end, { "i", "s" }),
 
         ["<C-l>"] = cmp.mapping(function(fallback)
             -- This little snippet will confirm with tab, and if no entry is selected, will confirm the first item
@@ -355,7 +356,7 @@ cmp.setup({
             else
                 fallback()
             end
-        end),
+        end, { "i", "s" }),
 
         ["<C-Space>"] = cmp.mapping(function(fallback)
             -- fallback() should release the key if completion is not visible
@@ -368,13 +369,13 @@ cmp.setup({
             else
                 fallback()
             end
-        end),
+        end, { "i", "s" }),
     },
 
     -- You should specify your *installed* sources.
     sources = {
-        { name = "luasnip" },
         { name = "nvim_lsp" },
+        { name = "luasnip" },
         { name = "buffer", keyword_length = 5, max_item_count = 5 },
         { name = "path" },
         { name = "git" },

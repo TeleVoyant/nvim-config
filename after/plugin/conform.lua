@@ -23,6 +23,7 @@ conform.setup({
         xml = { "xmlformatter" },
         sh = { "shfmt" },
         asm = { "asmfmt" },
+        dart = { "dcm" },
         -- Use the "*" filetype to run formatters on all filetypes.
         ["*"] = { "trim_whitespace" },
         -- Use the "_" filetype to run formatters on filetypes that don't

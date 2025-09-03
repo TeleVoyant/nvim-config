@@ -16,6 +16,7 @@ lint.linters_by_ft = {
     sh = { "shellcheck" },
     solidity = { "solhint" },
     env = { "dotenv-linter" },
+    dart = { "dcm" },
 }
 
 -- SPECIAL CASE (PYLINT IS ANNOYING) --
