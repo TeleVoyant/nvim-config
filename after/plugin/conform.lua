@@ -15,15 +15,16 @@ conform.setup({
         markdown = { "prettierd" },
         lua = { "stylua" },
         python = { "isort", "black" },
-        go = { "goimports", "gofmt" },
+        go = { "goimports-reviser", "gofumpt" },
         cpp = { "clang-format" },
         c = { "clang-format" },
-        java = { "clang-format" },
+        java = { "clang-format", "google-java-format" },
         php = { "phpcbf" },
         xml = { "xmlformatter" },
         sh = { "shfmt" },
         asm = { "asmfmt" },
         dart = { "dcm" },
+        kotlin = { "ktlint" },
         -- Use the "*" filetype to run formatters on all filetypes.
         ["*"] = { "trim_whitespace" },
         -- Use the "_" filetype to run formatters on filetypes that don't

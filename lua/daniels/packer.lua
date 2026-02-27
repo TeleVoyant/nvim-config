@@ -20,33 +20,36 @@ return require("packer").startup(function(use)
     use("nvim-treesitter/nvim-treesitter", { run = ":TSUpdate" })
     -- tree blame playground --
     use("nvim-treesitter/playground")
+    -- sticky context for neovim, very important --
+    use("nvim-treesitter/nvim-treesitter-context")
     -- ------------------------------------- --
-
     -- the perfect Rose-pine colors --
     use({
         "rose-pine/neovim",
         as = "rose-pine",
-        -- commit = "6b9840790cc7acdfadde07f308d34b62dd9cc675",
-        -- config = function()
-        --     vim.cmd.colorscheme("rose-pine")
-        -- end,
     })
     use({
         "f-person/auto-dark-mode.nvim",
-        --commit = "76d9ba9b305e492169611cc3ebf5f976c5d6cada",
     })
 
-    -- the only finder you will ever need --
+    -- -------------------------------------- --
+    -- - the only finder you will ever need - --
     use({
         "nvim-telescope/telescope.nvim",
-        tag = "0.1.5",
+        tag = "*",
         -- or                            , branch = '0.1.x',
         requires = {
+            { "nvim-telescope/telescope-live-grep-args.nvim" },
+            {
+                "nvim-telescope/telescope-fzf-native.nvim",
+                run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release --target install",
+            },
             { "nvim-lua/plenary.nvim" },
             { "BurntSushi/ripgrep" },
             { "sharkdp/fd" },
         },
     })
+    -- -------------------------------------- --
 
     ------------------------------------------------------
     ------------------- additional plugins ---------------
@@ -146,6 +149,35 @@ return require("packer").startup(function(use)
             { "mfussenegger/nvim-dap-python" },
         },
     })
+    -- ---------------------------------- --
+
+    -- ----------------------------------- --
+    -- ---- vibe coding is now a thing ---  --
+    use({
+        "zbirenbaum/copilot.lua",
+        requires = {
+            "copilotlsp-nvim/copilot-lsp", -- (optional) for NES functionality
+        },
+    })
+    use({
+        "zbirenbaum/copilot-cmp",
+        requires = "zbirenbaum/copilot.lua",
+        after = { "copilot.lua" },
+    })
+    use({
+        "olimorris/codecompanion.nvim",
+        tag = "*",
+        requires = {
+            { "ravitemer/codecompanion-history.nvim" },
+            { "nvim-lua/plenary.nvim" },
+            { "nvim-treesitter/nvim-treesitter" },
+            { "zbirenbaum/copilot-cmp" },
+            { "ravitemer/mcphub.nvim" },
+            { "HakonHarnes/img-clip.nvim" },
+            { "MeanderingProgrammer/render-markdown.nvim" },
+        },
+    })
+    -- ---------------------------------- --
 
     -- -------------------------------- --
     -- ---- documentaion generator ---- --
@@ -178,17 +210,6 @@ return require("packer").startup(function(use)
     -- ----------------------------------- --
 
     -- ----------------------------------- --
-    -- -- Flutter/Dart tools for neovim -- --
-    use({
-        "nvim-flutter/flutter-tools.nvim",
-        requires = {
-            "nvim-lua/plenary.nvim",
-            "stevearc/dressing.nvim", -- optional for vim.ui.select
-        },
-    })
-    -- ----------------------------------- --
-
-    -- ----------------------------------- --
     -- -- for all the notes in the code -- --
     use({
         "epwalsh/obsidian.nvim",
@@ -208,6 +229,12 @@ return require("packer").startup(function(use)
         branch = "harpoon2",
         requires = { "nvim-lua/plenary.nvim" },
     })
+    -- navigate through buffer as fast as lightning
+    use({
+        "folke/flash.nvim",
+        opts = {},
+    })
+
     -- open urls recognized on the current buffer
     use("axieax/urlview.nvim")
 
@@ -237,7 +264,6 @@ return require("packer").startup(function(use)
     -- for all the indents and space highlightings --
     use({
         "lukas-reineke/indent-blankline.nvim",
-        --commit = "e7a4442e055ec953311e77791546238d1eaae507",
     })
 
     -- for comments --
@@ -249,7 +275,14 @@ return require("packer").startup(function(use)
     })
 
     -- Cloak sensitive files from prying eyes
-    use("laytan/cloak.nvim")
+    use({ "laytan/cloak.nvim" })
+
+    -- typing metrics
+    use({ "leonardcser/wpm-tracker.nvim" })
+    use({
+        "NStefan002/speedtyper.nvim",
+        branch = "v2",
+    })
 
     -- Surround with brackets or quotes
     use({
@@ -269,7 +302,27 @@ return require("packer").startup(function(use)
         end,
     })
 
-    -- for openscad programming --
+    -- hex editor --
+    use("RaafatTurki/hex.nvim")
+
+    -- ----------------------------------- --
+    -- ----------------------------------- --
+    -- -- PROGRAMMING-SPECIFIC PLUGINS --- --
+    -- ----------------------------------- --
+
+    -- ----------------------------------- --
+    -- -- Flutter/Dart tools for neovim -- --
+    use({
+        "nvim-flutter/flutter-tools.nvim",
+        requires = {
+            "nvim-lua/plenary.nvim",
+            "stevearc/dressing.nvim", -- optional for vim.ui.select
+        },
+    })
+    -- ----------------------------------- --
+
+    -- ----------------------------------- --
+    -- ---- for openscad programming ----- --
     use({
         "salkin-mada/openscad.nvim",
         config = function()
@@ -278,12 +331,18 @@ return require("packer").startup(function(use)
         end,
         requires = { "L3MON4D3/LuaSnip" },
     })
+    -- ----------------------------------- --
+    -- ----------------------------------- --
 
-    -- hex editor --
-    use("RaafatTurki/hex.nvim")
-
-    -- ----------------------- --
+    -- ----------------------------------- --
+    -- ------- NEW PLUGINS TESTS --------- --
+    use({
+        "TeleVoyant/smart-increment.nvim",
+    })
+    -- ----------------------------------- --
+    -- ----------------------------------- --
 end)
+-- ---------------------------------------------- --
 -- ---------------------------------------------- --
 -- ------------- End of plugin list ------------- --
 -- ---------------------------------------------- --

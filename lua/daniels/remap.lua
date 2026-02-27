@@ -75,7 +75,7 @@ vim.keymap.set("n", "<leader>sc", ":%s/\\\\+/___/g<Left><Left><Left><Left><Left>
 vim.keymap.set("v", "<leader>sc", ":s/\\\\+/___/g<Left><Left><Left><Left><Left><Left><Left><Left>")
 
 -- makes scripts executable ( using command chmod +x $filename.$fileext )
-vim.keymap.set("n", "<leader>mx", "<cmd>!chmod +x %<CR>", { silent = true })
+-- vim.keymap.set("n", "<leader>mx", "<cmd>!chmod +x %<CR>", { silent = true })
 
 -- Undo and redo just like back and fwd from browser vimium c
 -- more of the vimium c tab management remaps are done in barbar.lua

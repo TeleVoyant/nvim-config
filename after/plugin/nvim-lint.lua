@@ -16,7 +16,11 @@ lint.linters_by_ft = {
     sh = { "shellcheck" },
     solidity = { "solhint" },
     env = { "dotenv-linter" },
-    dart = { "dcm" },
+    kotlin = { "ktlint" },
+    go = { "revive", "staticcheck" },
+    makefile = { "checkmake" },
+    java = { "checkstyle" },
+    -- dart = { "dcm" },
 }
 
 -- SPECIAL CASE (PYLINT IS ANNOYING) --

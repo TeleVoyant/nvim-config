@@ -77,7 +77,8 @@ require("mason-tool-installer").setup({
         "isort",
         "black",
         "codespell",
-        "goimports",
+        "goimports-reviser",
+        "gofumpt",
         "eslint_d",
         "phpcbf",
         "phpstan",
@@ -93,6 +94,12 @@ require("mason-tool-installer").setup({
         "shfmt",
         "solhint",
         "asmfmt",
+        "dotenv-linter",
+        "ktlint",
+        "revive",
+        "staticcheck",
+        "checkmake",
+        "dcm",
     },
 })
 require("mason-lspconfig").setup({
@@ -205,10 +212,10 @@ lsp.on_attach(function(foobar, bufnr)
         vim.diagnostic.open_float()
     end, opts)
     vim.keymap.set("n", "[d", function()
-        vim.diagnostic.goto_prev()
+        vim.diagnostic.jump({ count = -1 })
     end, opts)
     vim.keymap.set("n", "]d", function()
-        vim.diagnostic.goto_next()
+        vim.diagnostic.jump({ count = 1 })
     end, opts)
     vim.keymap.set({ "n", "v" }, "<leader>vca", function()
         vim.lsp.buf.code_action()
@@ -252,6 +259,7 @@ lsp.extend_cmp()
 -- nvim-cmp configurations follow after lsp-zero --
 -- --------------------------------------------- --
 require("cmp_git").setup() -- initialize cmp_git
+require("copilot_cmp").setup() -- initialize copilot_cmp
 local cmp = require("cmp")
 local types = require("cmp.types")
 local str = require("cmp.utils.str")
@@ -282,34 +290,69 @@ cmp.setup({
     -- formatings of nvim-cmp
     formatting = {
         fields = {
+            cmp.ItemField.Icon,
             cmp.ItemField.Kind,
             cmp.ItemField.Abbr,
             cmp.ItemField.Menu,
         },
         format = lspkind.cmp_format({
-            mode = "symbol",
+            mode = "symbol_text",
+            symbol_map = {
+                Copilot = "",
+                Text = "󰉿",
+                Method = "󰆧",
+                Function = "󰊕",
+                Constructor = "",
+                Field = "󰜢",
+                Variable = "󰀫",
+                Class = "󰠱",
+                Interface = "",
+                Module = "",
+                Property = "󰜢",
+                Unit = "󰑭",
+                Value = "󰎠",
+                Enum = "",
+                Keyword = "󰌋",
+                Snippet = "",
+                Color = "󰏘",
+                File = "󰈙",
+                Reference = "󰈇",
+                Folder = "󰉋",
+                EnumMember = "",
+                Constant = "󰏿",
+                Struct = "󰙅",
+                Event = "",
+                Operator = "󰆕",
+                TypeParameter = "",
+            },
+            menu = {
+                buffer = "[Buffer]",
+                nvim_lsp = "[LSP]",
+                luasnip = "[LSNIP]",
+                treesitter = "[TS]",
+                spell = "[Spll]",
+                cmp_tabnine = "[TN]",
+                calc = "[Calc]",
+                emoji = "[Emoji]",
+                copilot = "[AI]",
+            },
             before = function(entry, vim_item)
                 -- Get the full snippet (and only keep first line)
                 local word = entry:get_insert_text()
                 word = str.oneline(word)
 
                 -- concatenates the string
-                local max = 50
-                if string.len(word) >= max then
-                    local before = string.sub(word, 1, math.floor((max - 3) / 2))
-                    word = before .. "..."
+                local max = 40
+                if #word > max then
+                    word = word:sub(1, max - 3) .. "..."
                 end
 
-                if
-                    entry.completion_item.insertTextFormat == types.lsp.InsertTextFormat.Snippet
-                    and string.sub(vim_item.abbr, -1, -1) == "~"
-                then
-                    word = word .. "~"
-                end
                 vim_item.abbr = word
 
                 return vim_item
             end,
+            max_width = 40,
+            ellipsis_char = "...",
         }),
     },
     snippet = {
@@ -374,11 +417,34 @@ cmp.setup({
 
     -- You should specify your *installed* sources.
     sources = {
-        { name = "nvim_lsp" },
-        { name = "luasnip" },
-        { name = "buffer", keyword_length = 5, max_item_count = 5 },
-        { name = "path" },
-        { name = "git" },
+        { name = "copilot", group_index = 2 },
+        { name = "nvim_lsp", group_index = 2 },
+        { name = "luasnip", group_index = 2 },
+        { name = "buffer", group_index = 2, keyword_length = 5, max_item_count = 5 },
+        { name = "path", group_index = 2 },
+        { name = "git", group_index = 2 },
+        per_filetype = {
+            codecompanion = { "codecompanion" },
+        },
+    },
+
+    sorting = {
+        priority_weight = 2,
+        comparators = {
+            require("copilot_cmp.comparators").prioritize,
+
+            -- Below is the default comparitor list and order for nvim-cmp
+            cmp.config.compare.offset,
+            -- cmp.config.compare.scopes, --this is commented in nvim-cmp too
+            cmp.config.compare.exact,
+            cmp.config.compare.score,
+            cmp.config.compare.recently_used,
+            cmp.config.compare.locality,
+            cmp.config.compare.kind,
+            cmp.config.compare.sort_text,
+            cmp.config.compare.length,
+            cmp.config.compare.order,
+        },
     },
 
     experimental = {

@@ -4,11 +4,11 @@ require("daniels.remap")
 require("daniels.set")
 
 -- ----__----_-----___----__--__--_____--____---- --
---   / / `  / \   /  _\  / /.'." / __ ' / / `)    --
+--   / / `  / \   /  _\  / /.'." / __ / / / `)    --
 --  /  _ / / _ \ |  |_  / _'.'  / __'  / __'.     --
--- /  /   / / \ \ \ __//_/ \\  /____. / /  \ \    --
+-- /_/    /_/ \_\ \__/ /_/ \\  /____/ / /  \ \    --
 -- ---------------------------------------------- --
--- Ensure thaat packer is installed in the system --
+-- Ensure that packer is installed in the system --
 local ensure_packer = function()
     local fn = vim.fn
     local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
@@ -41,12 +41,14 @@ require("packer").startup(function(use)
 end)
 
 ---- Autocommand that reloads neovim whenever you save the packer.lua file
---vim.cmd([[
---augroup packer_user_config
---autocmd!
---autocmd BufWritePost packer.lua source <afile> | PackerSync
---augroup end
---]])
+vim.api.nvim_create_autocmd("BufWritePost", {
+    desc = "Reload neovim whenever you save the packer.lua file",
+    group = vim.api.nvim_create_augroup("packer_user_config", { clear = true }),
+    pattern = "packer.lua",
+    callback = function()
+        vim.cmd("source <afile> | PackerSync")
+    end,
+})
 
 -- Use a protected call so we don't error out on first use
 local status_ok, packer = pcall(require, "packer")

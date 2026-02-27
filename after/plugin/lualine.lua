@@ -141,6 +141,19 @@ ins_left({
 
 ins_left({ "progress", color = { fg = colors.fg, gui = "bold" } })
 
+ins_left({
+    function()
+        local wpm = require("wpm-tracker").get_current_wpm()
+        -- Format the WPM as you like
+        return string.format("%dwpm", wpm)
+    end,
+    cond = function()
+        return require("wpm-tracker").get_current_wpm() > 0
+    end,
+    icon = " ",
+    color = { fg = "#505050" },
+})
+
 -- Insert mid section. You can make any number of sections in neovim :)
 -- for lualine it's any number greater then 2
 ins_left({

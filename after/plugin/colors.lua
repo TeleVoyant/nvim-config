@@ -22,7 +22,7 @@ require("rose-pine").setup({
     disable_float_background = false,
 
     -- force darktheme, as parrot does not support theme switching
-    variant = "dawn", -- auto, main, moon, or dawn
+    variant = "moon", -- auto, main, moon, or dawn
     dark_variant = "moon", -- main, moon, or dawn
     dim_inactive_windows = true,
     extend_background_behind_borders = true,
@@ -94,6 +94,15 @@ require("rose-pine").setup({
 function ColorMyPencils(color)
     color = color or "rose-pine"
     vim.cmd.colorscheme(color)
+
+    -- i know i should throw these into lsp.lua, but they work flawless here!
+    -- got no time to figure out why. if it works, dont touch it.
+    vim.api.nvim_set_hl(0, "CmpItemKind", { fg = "#c678dd" })
+    vim.api.nvim_set_hl(0, "CmpItemKindFunction", { fg = "#61afef" })
+    vim.api.nvim_set_hl(0, "CmpItemKindVariable", { fg = "#e06c75" })
+    vim.api.nvim_set_hl(0, "CmpItemKindClass", { fg = "#e5c07b" })
+    vim.api.nvim_set_hl(0, "CmpItemKindInterface", { fg = "#56b6c2" })
+    vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#6CC644" })
 end
 
 ColorMyPencils()
