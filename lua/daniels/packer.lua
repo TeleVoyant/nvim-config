@@ -217,8 +217,9 @@ return require("packer").startup(function(use)
         requires = {
             { "nvim-lua/plenary.nvim" }, -- VERY Essential, Required
             { "hrsh7th/nvim-cmp" }, -- for Completion, Required
-            { "nvim-telescope/telescope.nvim" }, -- for searching, Optional
-            { "nvim-treesitter/nvim-treesitter" }, -- for highlightings, Optional
+            { "nvim-telescope/telescope.nvim" }, -- for searching, Optional but recommended
+            { "nvim-treesitter/nvim-treesitter" }, -- for highlightings, Optional but recommended
+            { "MeanderingProgrammer/render-markdown.nvim" }, -- for rendering markdown files, Optional but recommended
         },
     })
     -- ----------------------------------- --

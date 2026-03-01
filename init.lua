@@ -1,4 +1,3 @@
-vim.cmd([[autocmd! BufWritePost init.lua source init.lua | echom "                         Reloaded init.lua"]])
 print("  _______________________________________________________________________ ")
 print(" ┊ MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM ┊")
 print(" ┊ MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMXKOkxdoodx0XWMMMMMMMMMMMMMMMMMMMMMMM ┊")

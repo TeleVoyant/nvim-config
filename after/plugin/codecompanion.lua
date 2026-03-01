@@ -152,8 +152,8 @@ codecompanion.setup({
         end,
     },
     strategies = {
-        chat = { adapter = "copilot" },
-        inline = { adapter = "copilot" },
+        chat = { adapter = "copilot", model = "gpt-4o" },
+        inline = { adapter = "copilot", model = "gpt-4o" },
     },
     opts = {
         log_level = "DEBUG",
@@ -256,7 +256,8 @@ codecompanion.setup({
 
 -- dedicated keymaps for codecompanion actions and chat
 -- sacrificed key `m` for "m"odel and "m"enu, but it felt appropriate
-vim.keymap.set({ "n", "v" }, "<C-m>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
+vim.keymap.set({ "n", "v" }, "<C-m>", "<cmd>CodeCompanion<cr>", { noremap = true, silent = true })
+vim.keymap.set({ "n", "v" }, "<S-m>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
 vim.keymap.set({ "n", "v" }, "<leader>m", "<cmd>CodeCompanionChat Toggle<cr>", { noremap = true, silent = true })
 vim.keymap.set("v", "gm", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
 
