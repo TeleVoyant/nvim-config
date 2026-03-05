@@ -23,9 +23,16 @@ local conditions = {
     buffer_not_empty = function()
         return vim.fn.empty(vim.fn.expand("%:t")) ~= 1
     end,
-    hide_in_width = function()
+    hide_in_less_than_120_width = function()
+        return vim.fn.winwidth(0) > 120
+    end,
+    hide_in_less_than_80_width = function()
         return vim.fn.winwidth(0) > 80
     end,
+    -- hide_in_between_80_and_120_width = function()
+    --     local width = vim.fn.winwidth(0)
+    --     return width < 80 and width > 120
+    -- end,
     check_git_workspace = function()
         local filepath = vim.fn.expand("%:p:h")
         local gitdir = vim.fn.finddir(".git", filepath .. ";")
@@ -125,7 +132,7 @@ ins_left({
 ins_left({
     -- filesize component
     "filesize",
-    cond = conditions.hide_in_width,
+    -- cond = conditions.hide_in_between_80_and_120_width,
 })
 
 ins_left({
@@ -136,10 +143,13 @@ ins_left({
 
 ins_left({
     "location",
-    cond = conditions.hide_in_width,
+    -- cond = conditions.hide_in_between_80_and_120_width,
 })
 
-ins_left({ "progress", color = { fg = colors.fg, gui = "bold" } })
+ins_left({
+    "progress",
+    color = { fg = colors.fg, gui = "bold" },
+})
 
 ins_left({
     function()
@@ -147,7 +157,8 @@ ins_left({
         -- Format the WPM as you like
         return string.format("%dwpm", wpm)
     end,
-    cond = function()
+    cond = conditions.hide_in_less_than_120_width,
+    function()
         return require("wpm-tracker").get_current_wpm() > 0
     end,
     icon = " ",
@@ -179,6 +190,7 @@ ins_left({
         end
         return msg
     end,
+    cond = conditions.hide_in_less_than_80_width,
     -- icon = '󰈷 ',
     color = { gui = "bold" },
 })
@@ -242,12 +254,13 @@ ins_right({
             end
         end
     end,
+    cond = conditions.hide_in_less_than_120_width,
 })
 
 ins_right({
     "o:encoding", -- option component same as &encoding in viml
     fmt = string.upper, -- I'm not sure why it's upper case either ;)
-    cond = conditions.hide_in_width,
+    cond = conditions.hide_in_less_than_120_width,
     color = { fg = colors.green, gui = "bold" },
 })
 
@@ -255,12 +268,14 @@ ins_right({
     "fileformat",
     fmt = string.upper,
     icons_enabled = true, -- I think icons are cool but Eviline doesn't have them. sigh
+    cond = conditions.hide_in_less_than_120_width,
     color = { fg = colors.green, gui = "bold" },
 })
 
 ins_right({
     "branch",
     icon = "  ",
+    cond = conditions.hide_in_less_than_80_width,
     color = { fg = colors.violet, gui = "bold" },
 })
 
@@ -273,7 +288,7 @@ ins_right({
         modified = { fg = colors.orange },
         removed = { fg = colors.red },
     },
-    cond = conditions.hide_in_width,
+    cond = conditions.hide_in_less_than_120_width,
 })
 
 ins_right({

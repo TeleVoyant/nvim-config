@@ -12,21 +12,6 @@ local codecompanion = require("codecompanion")
 local progress = require("fidget.progress")
 local handles = {}
 
--- -- For debugging: log all CodeCompanion events
--- vim.api.nvim_create_autocmd("User", {
---     pattern = "CodeCompanion*",
---     group = group,
---     callback = function(args)
---         local event_str
---         if args.data and args.data.message then
---             event_str = "Event: " .. args.data .. " [ " .. args.data.message .. " ] "
---         else
---             event_str = "Event: " .. args.match
---         end
---         vim.notify(event_str, vim.log.levels.INFO)
---     end,
--- })
-
 vim.api.nvim_create_autocmd("User", {
     pattern = "CodeCompanion*",
     group = vim.api.nvim_create_augroup("CodeCompanionFidget", { clear = true }),
