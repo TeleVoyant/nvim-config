@@ -18,8 +18,6 @@ return require("packer").startup(function(use)
     -- ------------------------------------- --
     -- tree blame for neovim, very important --
     use("nvim-treesitter/nvim-treesitter", { run = ":TSUpdate" })
-    -- tree blame playground --
-    use("nvim-treesitter/playground")
     -- sticky context for neovim, very important --
     use("nvim-treesitter/nvim-treesitter-context")
     -- ------------------------------------- --
@@ -42,7 +40,8 @@ return require("packer").startup(function(use)
             { "nvim-telescope/telescope-live-grep-args.nvim" },
             {
                 "nvim-telescope/telescope-fzf-native.nvim",
-                run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release --target install",
+                -- run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release --target install",
+                run = "make",
             },
             { "nvim-lua/plenary.nvim" },
             { "BurntSushi/ripgrep" },
@@ -298,9 +297,6 @@ return require("packer").startup(function(use)
     use({
         "MeanderingProgrammer/render-markdown.nvim",
         after = { "nvim-treesitter" },
-        config = function()
-            require("render-markdown").setup({})
-        end,
     })
 
     -- hex editor --

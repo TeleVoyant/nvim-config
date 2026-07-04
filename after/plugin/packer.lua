@@ -9,4 +9,9 @@ packer.init({
         open_fn = require("packer.util").float, -- An optional function to open a window for packer's display
         open_cmd = "65vnew \\[packer\\]", -- An optional command to open a window for packer's display
     },
+    --max_jobs = 4,          -- fewer parallel git jobs = more bandwidth each
+    git = {
+        clone_timeout = 600, -- seconds (default is 60)
+        depth = 1, -- shallow clone; already the default
+    },
 })
