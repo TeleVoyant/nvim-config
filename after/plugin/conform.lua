@@ -25,6 +25,7 @@ conform.setup({
         asm = { "asmfmt" },
         dart = { "dcm" },
         kotlin = { "ktlint" },
+        nix = { "alejandra", "nixpkgs-fmt" },
         -- Use the "*" filetype to run formatters on all filetypes.
         ["*"] = { "trim_whitespace" },
         -- Use the "_" filetype to run formatters on filetypes that don't

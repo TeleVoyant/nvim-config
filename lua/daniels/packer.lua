@@ -40,8 +40,8 @@ return require("packer").startup(function(use)
             { "nvim-telescope/telescope-live-grep-args.nvim" },
             {
                 "nvim-telescope/telescope-fzf-native.nvim",
-                -- run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release --target install",
-                run = "make",
+                run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release --target install",
+                -- run = "make",
             },
             { "nvim-lua/plenary.nvim" },
             { "BurntSushi/ripgrep" },
@@ -157,6 +157,8 @@ return require("packer").startup(function(use)
         requires = {
             "copilotlsp-nvim/copilot-lsp", -- (optional) for NES functionality
         },
+        cmd = "Copilot",
+        event = "InsertEnter",
     })
     use({
         "zbirenbaum/copilot-cmp",

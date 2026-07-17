@@ -12,5 +12,5 @@ vim.g.lazygit_config_file_path = {} -- table of custom config file paths
 vim.g.lazygit_on_exit_callback = nil -- optional function callback when exiting lazygit (useful for example to refresh some UI elements after lazy git has made some changes)
 
 -- lazygit keymaps --
-vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", { silent = true })
-vim.keymap.set("n", "<leader>gc", ":LazyGitFilterCurrentFile<CR>", { silent = true })
+vim.keymap.set("n", "<leader>GG", ":LazyGit<CR>", { silent = true })
+vim.keymap.set("n", "<leader>Gc", ":LazyGitFilterCurrentFile<CR>", { silent = true })

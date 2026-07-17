@@ -127,6 +127,7 @@ require("mason-lspconfig").setup({
         "solidity_ls_nomicfoundation",
         "solidity_ls",
         "asm_lsp",
+        "taplo",
     },
     handlers = {
         lsp.default_setup,
@@ -259,7 +260,11 @@ lsp.extend_cmp()
 -- nvim-cmp configurations follow after lsp-zero --
 -- --------------------------------------------- --
 require("cmp_git").setup() -- initialize cmp_git
-require("copilot_cmp").setup() -- initialize copilot_cmp
+local status, copilot_cmp = pcall(require, "copilot_cmp") -- initialize copilot_cmp
+if status then
+    copilot_cmp.setup()
+end
+local has_copilot_comparators, copilot_comparators = pcall(require, "copilot_cmp.comparators")
 local cmp = require("cmp")
 local types = require("cmp.types")
 local str = require("cmp.utils.str")
@@ -431,11 +436,13 @@ cmp.setup({
     sorting = {
         priority_weight = 2,
         comparators = {
-            require("copilot_cmp.comparators").prioritize,
+            -- Use a ternary check to only include it if the plugin is active
+            has_copilot_comparators and copilot_comparators.prioritize or nil,
 
             -- Below is the default comparitor list and order for nvim-cmp
             cmp.config.compare.offset,
             -- cmp.config.compare.scopes, --this is commented in nvim-cmp too
+            cmp.config.compare.offset,
             cmp.config.compare.exact,
             cmp.config.compare.score,
             cmp.config.compare.recently_used,

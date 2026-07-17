@@ -20,6 +20,7 @@ lint.linters_by_ft = {
     go = { "revive", "staticcheck" },
     makefile = { "checkmake" },
     java = { "checkstyle" },
+    nix = { "statix" },
     -- dart = { "dcm" },
 }
 
