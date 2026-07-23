@@ -100,6 +100,9 @@ require("mason-tool-installer").setup({
         "staticcheck",
         "checkmake",
         "dcm",
+        "statix",
+        "nixpkgs-fmt",
+        "alejandra",
     },
 })
 require("mason-lspconfig").setup({
@@ -128,6 +131,7 @@ require("mason-lspconfig").setup({
         "solidity_ls",
         "asm_lsp",
         "taplo",
+        "rnix",
     },
     handlers = {
         lsp.default_setup,
@@ -143,7 +147,7 @@ require("mason-lspconfig").setup({
 -- ---------------------------------- --
 local cmp_action = require("lsp-zero").cmp_action()
 
-lsp.on_attach(function(foobar, bufnr)
+lsp.on_attach(function(on_attach_action, bufnr)
     -- -------------------------------------------------------------- --
     -- Display language server(s) that are loaded, on the prompt-line --
     local function get_active_lsps()
@@ -180,6 +184,7 @@ lsp.on_attach(function(foobar, bufnr)
         end
     end
     -- only notify once, and on new language server detection
+    -- not everytime i open file on buffer, annoying
     vim.notify_once(get_active_lsps(), vim.log.levels.INFO, { silent = true })
     -- -------------------------------------------------------------- --
 
@@ -240,7 +245,7 @@ vim.diagnostic.config({
         text = {
             [vim.diagnostic.severity.ERROR] = "",
             [vim.diagnostic.severity.WARN] = "",
-            [vim.diagnostic.severity.INFO] = "ⓘ",
+            [vim.diagnostic.severity.INFO] = "󰋽",
             [vim.diagnostic.severity.HINT] = "",
         },
         linehl = {

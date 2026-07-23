@@ -1,3 +1,4 @@
+--§4a120755a64cf5238e54b53fe170be9ab944a0d872edec7d211d4bc52ba12331§--
 -- This file can be loaded by calling `lua require('plugins')` from your init.vim
 
 -- Only required if you have packer configured as `opt`

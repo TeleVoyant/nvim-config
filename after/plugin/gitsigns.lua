@@ -50,23 +50,6 @@ require("gitsigns").setup({
             vim.keymap.set(mode, l, r, opts)
         end
 
-        -- Navigation
-        map("n", "]c", function()
-            if vim.wo.diff then
-                vim.cmd.normal({ "]c", bang = true })
-            else
-                gitsigns.nav_hunk("next")
-            end
-        end)
-
-        map("n", "[c", function()
-            if vim.wo.diff then
-                vim.cmd.normal({ "[c", bang = true })
-            else
-                gitsigns.nav_hunk("prev")
-            end
-        end)
-
         -- Actions
         map("n", "<leader>gs", gitsigns.stage_hunk)
         map("n", "<leader>gr", gitsigns.reset_hunk)
@@ -80,6 +63,21 @@ require("gitsigns").setup({
         map("n", "<leader>gu", gitsigns.undo_stage_hunk)
         map("n", "<leader>gR", gitsigns.reset_buffer)
         map("n", "<leader>gp", gitsigns.preview_hunk)
+        -- Navigation
+        map("n", "]g", function()
+            if vim.wo.diff then
+                vim.cmd.normal({ "]g", bang = true })
+            else
+                gitsigns.nav_hunk("next", { preview = true, count = 1 })
+            end
+        end)
+        map("n", "[g", function()
+            if vim.wo.diff then
+                vim.cmd.normal({ "[g", bang = true })
+            else
+                gitsigns.nav_hunk("prev", { preview = true, count = 1 })
+            end
+        end)
         map("n", "<leader>gb", function()
             gitsigns.blame_line({ full = true })
         end)
