@@ -26,15 +26,6 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
--- -- Plugin vim-with-me
--- vim.keymap.set("n", "<leader>vwm", function()
---     require("vim-with-me").StartVimWithMe()
--- end)
--- vim.keymap.set("n", "<leader>svwm", function()
---     require("vim-with-me").StopVimWithMe()
--- end)
--- -- end plugin vim-with-me
-
 -- "greatest remap ever" says the primeagen
 -- prevents ALTERNING of copied buffer to the replaced contents
 -- by deleting the replaced contents into "the null void"
@@ -87,10 +78,30 @@ vim.keymap.set("n", "<leader>H", ":CloakToggle<CR>", { silent = true })
 vim.keymap.set("n", "<leader>h", ":CloakPreviewLine<CR>", { silent = true })
 
 -- adaptive jumps silently
-vim.keymap.set("n", "<C-j>", ":lua vim.cmd(string.format('normal! %dj', JumpAmount('j', 'n')))<CR>", { silent = true })
-vim.keymap.set("n", "<C-k>", ":lua vim.cmd(string.format('normal! %dk', JumpAmount('k', 'n')))<CR>", { silent = true })
-vim.keymap.set("n", "<C-h>", ":lua vim.cmd(string.format('normal! %dh', JumpAmount('h', 'n')))<CR>", { silent = true })
-vim.keymap.set("n", "<C-l>", ":lua vim.cmd(string.format('normal! %dl', JumpAmount('l', 'n')))<CR>", { silent = true })
+vim.keymap.set(
+    "n",
+    "<C-j>",
+    ":lua vim.cmd(string.format('normal! %dj', JumpAmount('j', 'n')))<CR>zz",
+    { silent = true }
+)
+vim.keymap.set(
+    "n",
+    "<C-k>",
+    ":lua vim.cmd(string.format('normal! %dk', JumpAmount('k', 'n')))<CR>zz",
+    { silent = true }
+)
+vim.keymap.set(
+    "n",
+    "<C-h>",
+    ":lua vim.cmd(string.format('normal! %dh', JumpAmount('h', 'n')))<CR>zz",
+    { silent = true }
+)
+vim.keymap.set(
+    "n",
+    "<C-l>",
+    ":lua vim.cmd(string.format('normal! %dl', JumpAmount('l', 'n')))<CR>zz",
+    { silent = true }
+)
 -- jump with selection towards the botton
 vim.keymap.set("v", "<C-j>", ':lua vim.cmd(":\'<,\'>m .+" .. JumpAmount("j", "v"))<CR>gv=gv', { silent = true })
 -- or towards the top with the selection
@@ -128,7 +139,7 @@ function JumpAmount(key, mode)
     else
         return 0 -- unknown direction, dont jump
     end
-    return math.floor(dist / 1.5)
+    return math.floor(dist / 1.05)
 end
 
 -- end JUMPING DIST CALCULATOR --
