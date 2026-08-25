@@ -118,3 +118,138 @@ end
 -- ---------------------------------------------------------------------------
 
 vim.lsp.enable("jdtls")
+
+-- ============================================================================
+-- Java-specific keymaps
+--
+-- Only create these mappings in buffers where JDTLS actually attached.
+-- ============================================================================
+
+vim.api.nvim_create_autocmd("LspAttach", {
+    callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+
+        if not client or client.name ~= "jdtls" then
+            return
+        end
+
+        local opts = {
+            buffer = args.buf,
+            silent = true,
+        }
+
+        -- --------------------------------------------------------------------
+        -- Application runner
+        -- --------------------------------------------------------------------
+        vim.keymap.set(
+            "n",
+            "<leader>jr",
+            "<cmd>JavaRunnerRunMain<CR>",
+            vim.tbl_extend("force", opts, {
+                desc = "Java: Run main",
+            })
+        )
+
+        vim.keymap.set(
+            "n",
+            "<leader>js",
+            "<cmd>JavaRunnerStopMain<CR>",
+            vim.tbl_extend("force", opts, {
+                desc = "Java: Stop main",
+            })
+        )
+
+        vim.keymap.set(
+            "n",
+            "<leader>jl",
+            "<cmd>JavaRunnerToggleLogs<CR>",
+            vim.tbl_extend("force", opts, {
+                desc = "Java: Toggle logs",
+            })
+        )
+
+        -- --------------------------------------------------------------------
+        -- Tests
+        -- --------------------------------------------------------------------
+        vim.keymap.set(
+            "n",
+            "<leader>jtc",
+            "<cmd>JavaTestRunCurrentClass<CR>",
+            vim.tbl_extend("force", opts, {
+                desc = "Java: Test current class",
+            })
+        )
+
+        vim.keymap.set(
+            "n",
+            "<leader>jtm",
+            "<cmd>JavaTestRunCurrentMethod<CR>",
+            vim.tbl_extend("force", opts, {
+                desc = "Java: Test current method",
+            })
+        )
+
+        vim.keymap.set(
+            "n",
+            "<leader>jta",
+            "<cmd>JavaTestRunAllTests<CR>",
+            vim.tbl_extend("force", opts, {
+                desc = "Java: Test all",
+            })
+        )
+
+        vim.keymap.set(
+            "n",
+            "<leader>jdc",
+            "<cmd>JavaTestDebugCurrentClass<CR>",
+            vim.tbl_extend("force", opts, {
+                desc = "Java: Debug current test class",
+            })
+        )
+
+        vim.keymap.set(
+            "n",
+            "<leader>jdm",
+            "<cmd>JavaTestDebugCurrentMethod<CR>",
+            vim.tbl_extend("force", opts, {
+                desc = "Java: Debug current test method",
+            })
+        )
+
+        -- --------------------------------------------------------------------
+        -- Build
+        -- --------------------------------------------------------------------
+        vim.keymap.set(
+            "n",
+            "<leader>jb",
+            "<cmd>JavaBuildBuildWorkspace<CR>",
+            vim.tbl_extend("force", opts, {
+                desc = "Java: Build workspace",
+            })
+        )
+
+        -- --------------------------------------------------------------------
+        -- Spring / Java profile UI
+        -- --------------------------------------------------------------------
+        vim.keymap.set(
+            "n",
+            "<leader>jp",
+            "<cmd>JavaProfile<CR>",
+            vim.tbl_extend("force", opts, {
+                desc = "Java: Profiles",
+            })
+        )
+
+        -- --------------------------------------------------------------------
+        -- Select Java runtime
+        -- --------------------------------------------------------------------
+        vim.keymap.set(
+            "n",
+            "<leader>jv",
+            "<cmd>JavaSettingsChangeRuntime<CR>",
+            vim.tbl_extend("force", opts, {
+                desc = "Java: Change runtime",
+            })
+        )
+    end,
+})

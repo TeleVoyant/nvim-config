@@ -198,51 +198,156 @@ lsp.on_attach(function(on_attach_action, bufnr)
 
     -- lsp keymaps
     local opts = { buffer = bufnr, remap = false }
-    vim.keymap.set("n", "gd", function()
-        vim.lsp.buf.definition()
-    end, opts)
-    vim.keymap.set("n", "gi", function()
-        vim.lsp.buf.implementation()
-    end, opts)
-    vim.keymap.set("n", "gD", function()
-        vim.lsp.buf.declaration()
-    end, opts)
-    vim.keymap.set("n", "gr", function()
-        vim.lsp.buf.references()
-    end, opts)
-    vim.keymap.set("n", "J", function()
-        vim.lsp.buf.hover()
-    end, opts)
-    vim.keymap.set("n", "K", function()
-        vim.lsp.buf.signature_help()
-    end, opts)
-    vim.keymap.set("n", "L", function()
-        vim.lsp.buf.type_definition()
-    end, opts)
-    vim.keymap.set("n", "<leader>vws", function()
-        vim.lsp.buf.workspace_symbol()
-    end, opts)
-    vim.keymap.set("n", "<leader>vd", function()
-        vim.diagnostic.open_float()
-    end, opts)
-    vim.keymap.set("n", "[d", function()
-        vim.diagnostic.jump({ count = -1 })
-    end, opts)
-    vim.keymap.set("n", "]d", function()
-        vim.diagnostic.jump({ count = 1 })
-    end, opts)
-    vim.keymap.set({ "n", "v" }, "<leader>vca", function()
-        vim.lsp.buf.code_action()
-    end, opts)
-    vim.keymap.set("n", "<leader>vrf", function()
-        vim.lsp.buf.references()
-    end, opts)
-    vim.keymap.set("n", "<leader>vrn", function()
-        vim.lsp.buf.rename()
-    end, opts)
-    vim.keymap.set("i", "<C-i>", function()
-        vim.lsp.buf.signature_help()
-    end, opts)
+    vim.keymap.set(
+        "n",
+        "gd",
+        function()
+            vim.lsp.buf.definition()
+        end,
+        vim.tbl_extend("force", opts, {
+            desc = "Go to func/class/method/var Definition",
+        })
+    )
+    vim.keymap.set(
+        "n",
+        "gi",
+        function()
+            vim.lsp.buf.implementation()
+        end,
+        vim.tbl_extend("force", opts, {
+            desc = "Go to func/class/method/var implementation",
+        })
+    )
+    vim.keymap.set(
+        "n",
+        "gD",
+        function()
+            vim.lsp.buf.declaration()
+        end,
+        vim.tbl_extend("force", opts, {
+            desc = "Go to func/class/method/var Declaration",
+        })
+    )
+    vim.keymap.set(
+        "n",
+        "gr",
+        function()
+            vim.lsp.buf.references()
+        end,
+        vim.tbl_extend("force", opts, {
+            desc = "Go to func/class/method/var References",
+        })
+    )
+    vim.keymap.set(
+        "n",
+        "J",
+        function()
+            vim.lsp.buf.hover()
+        end,
+        vim.tbl_extend("force", opts, {
+            desc = "Activate hover help documentation",
+        })
+    )
+    vim.keymap.set(
+        "n",
+        "K",
+        function()
+            vim.lsp.buf.signature_help()
+        end,
+        vim.tbl_extend("force", opts, {
+            desc = "Display signature information about the symbol under cursor",
+        })
+    )
+    vim.keymap.set(
+        "n",
+        "L",
+        function()
+            vim.lsp.buf.type_definition()
+        end,
+        vim.tbl_extend("force", opts, {
+            desc = "Jumps to defn of type of symbol under cursor",
+        })
+    )
+    vim.keymap.set(
+        "n",
+        "<leader>vws",
+        function()
+            vim.lsp.buf.workspace_symbol()
+        end,
+        vim.tbl_extend("force", opts, {
+            desc = "View workspace symbols",
+        })
+    )
+    vim.keymap.set(
+        "n",
+        "<leader>vd",
+        function()
+            vim.diagnostic.open_float()
+        end,
+        vim.tbl_extend("force", opts, {
+            desc = "View diagnostics under cursor line",
+        })
+    )
+    vim.keymap.set(
+        "n",
+        "[d",
+        function()
+            vim.diagnostic.jump({ count = -1 })
+        end,
+        vim.tbl_extend("force", opts, {
+            desc = "Jump to previous diagnostic-triggered line",
+        })
+    )
+    vim.keymap.set(
+        "n",
+        "]d",
+        function()
+            vim.diagnostic.jump({ count = 1 })
+        end,
+        vim.tbl_extend("force", opts, {
+            desc = "Jump to next diagnostic-triggered line",
+        })
+    )
+    vim.keymap.set(
+        { "n", "v" },
+        "<leader>vca",
+        function()
+            vim.lsp.buf.code_action()
+        end,
+        vim.tbl_extend("force", opts, {
+            desc = "View code actions under cursor line",
+        })
+    )
+    vim.keymap.set(
+        "n",
+        "<leader>vrf",
+        function()
+            vim.lsp.buf.references()
+        end,
+        vim.tbl_extend("force", opts, {
+            desc = "List all references to symbol under cursor",
+        })
+    )
+    vim.keymap.set(
+        "n",
+        "<leader>vrn",
+        function()
+            vim.lsp.buf.rename()
+        end,
+        vim.tbl_extend("force", opts, {
+            desc = "Rename all references to the symbol under cursor",
+        })
+    )
+    vim.keymap.set(
+        "i",
+        "<C-i>",
+        function()
+            vim.lsp.buf.signature_help()
+        end,
+        vim.tbl_extend("force", opts, {
+            desc = "Display signature information about the symbol under cursor",
+        })
+    )
 end)
 
 -- Highlight entire line for errors
