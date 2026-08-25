@@ -1,4 +1,4 @@
---§4a120755a64cf5238e54b53fe170be9ab944a0d872edec7d211d4bc52ba12331§--
+--§bca9ac1aebfb0e599a62a6da1dc96daeaac29d798eebddc39dfc2a62a47cdfb2§--
 -- This file can be loaded by calling `lua require('plugins')` from your init.vim
 
 -- Only required if you have packer configured as `opt`
@@ -141,12 +141,31 @@ return require("packer").startup(function(use)
             -- WHY? inspite of standardized LSP communication protocol,
             -- every DAP has its own communication rules and triggers.
             -- cause f*** you why not :)
-            -- Java DAP
-            { "mfussenegger/nvim-jdtls" },
+            -- Java DAP (configured automatically by nvim-java)
+            -- { "mfussenegger/nvim-jdtls" },
             -- Go DAP
             { "leoluz/nvim-dap-go" },
             -- Python DAP
             { "mfussenegger/nvim-dap-python" },
+        },
+    })
+
+    -- -------------------------------------- --
+    -- - LSP and DAP server config for java -  --
+    use({
+        "nvim-java/nvim-java",
+
+        -- Latest stable release as of now.
+        tag = "v4.1.2",
+
+        requires = {
+            "MunifTanjim/nui.nvim",
+            "mfussenegger/nvim-dap",
+
+            {
+                "JavaHello/spring-boot.nvim",
+                commit = "218c0c26c14d99feca778e4d13f5ec3e8b1b60f0",
+            },
         },
     })
     -- ---------------------------------- --
