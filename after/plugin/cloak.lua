@@ -34,5 +34,5 @@ cloak.setup({
 
 -- ------------------------ --
 -- --- cloaking keymaps --- --
-vim.keymap.set("n", "<leader>ct", cloak.toggle)
+vim.keymap.set("n", "<leader>cP", cloak.toggle)
 vim.keymap.set("n", "<leader>cp", cloak.uncloak_line)
