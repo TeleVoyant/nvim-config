@@ -198,26 +198,26 @@ dap.configurations.php = {
 
 -- ---------------------------- --
 -- --- Elixir debug adapter --- --
-dap.adapters.mix_task = {
-    type = "executable",
-    command = "~/.local/share/nvim/mason/packages/elixir-ls/debug_adapter.sh", -- debug_adapter.bat for windows
-    args = {},
-}
-dap.configurations.elixir = {
-    {
-        type = "mix_task",
-        name = "mix test",
-        task = "test",
-        taskArgs = { "--trace" },
-        request = "launch",
-        startApps = true, -- for Phoenix projects
-        projectDir = "${workspaceFolder}",
-        requireFiles = {
-            "test/**/test_helper.exs",
-            "test/**/*_test.exs",
-        },
-    },
-}
+-- dap.adapters.mix_task = {
+--     type = "executable",
+--     command = "~/.local/share/nvim/mason/packages/elixir-ls/debug_adapter.sh", -- debug_adapter.bat for windows
+--     args = {},
+-- }
+-- dap.configurations.elixir = {
+--     {
+--         type = "mix_task",
+--         name = "mix test",
+--         task = "test",
+--         taskArgs = { "--trace" },
+--         request = "launch",
+--         startApps = true, -- for Phoenix projects
+--         projectDir = "${workspaceFolder}",
+--         requireFiles = {
+--             "test/**/test_helper.exs",
+--             "test/**/*_test.exs",
+--         },
+--     },
+-- }
 
 -- ------------------------------------------ --
 -- --- C/C++/Rust debug adapter (via GDB) --- --
@@ -241,34 +241,34 @@ dap.configurations.c = {
 
 -- -------------------------- --
 -- --- Bash debug adapter --- --
-dap.adapters.bashdb = {
-    type = "executable",
-    command = vim.fn.stdpath("data") .. "~/.local/share/nvim/mason/packages/bash-debug-adapter/bash-debug-adapter",
-    name = "bashdb",
-}
-dap.configurations.sh = {
-    {
-        type = "bashdb",
-        request = "launch",
-        name = "Launch file",
-        showDebugOutput = true,
-        pathBashdb = vim.fn.stdpath("data")
-            .. "~/.local/share/nvim/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb",
-        pathBashdbLib = vim.fn.stdpath("data")
-            .. "~/.local/share/nvim/mason/packages/bash-debug-adapter/extension/bashdb_dir",
-        trace = true,
-        file = "${file}",
-        program = "${file}",
-        cwd = "${workspaceFolder}",
-        pathCat = "cat",
-        pathBash = "/bin/bash",
-        pathMkfifo = "mkfifo",
-        pathPkill = "pkill",
-        args = {},
-        env = {},
-        terminalKind = "integrated",
-    },
-}
+-- dap.adapters.bashdb = {
+--     type = "executable",
+--     command = vim.fn.stdpath("data") .. "~/.local/share/nvim/mason/packages/bash-debug-adapter/bash-debug-adapter",
+--     name = "bashdb",
+-- }
+-- dap.configurations.sh = {
+--     {
+--         type = "bashdb",
+--         request = "launch",
+--         name = "Launch file",
+--         showDebugOutput = true,
+--         pathBashdb = vim.fn.stdpath("data")
+--             .. "~/.local/share/nvim/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb",
+--         pathBashdbLib = vim.fn.stdpath("data")
+--             .. "~/.local/share/nvim/mason/packages/bash-debug-adapter/extension/bashdb_dir",
+--         trace = true,
+--         file = "${file}",
+--         program = "${file}",
+--         cwd = "${workspaceFolder}",
+--         pathCat = "cat",
+--         pathBash = "/bin/bash",
+--         pathMkfifo = "mkfifo",
+--         pathPkill = "pkill",
+--         args = {},
+--         env = {},
+--         terminalKind = "integrated",
+--     },
+-- }
 
 -- ---------------------------- --
 -- ---- Dart debug adapter ---- --

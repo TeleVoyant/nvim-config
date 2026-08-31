@@ -22,7 +22,7 @@ require("rose-pine").setup({
     disable_float_background = false,
 
     -- force darktheme, as parrot does not support theme switching
-    variant = "moon", -- auto, main, moon, or dawn
+    variant = "auto", -- auto, main, moon, or dawn
     dark_variant = "moon", -- main, moon, or dawn
     dim_inactive_windows = true,
     extend_background_behind_borders = true,
