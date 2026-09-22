@@ -92,7 +92,6 @@ require("mason-tool-installer").setup({
         "vint",
         "xmlformatter",
         "shfmt",
-        "solhint",
         "asmfmt",
         "dotenv-linter",
         "ktlint",
@@ -126,15 +125,13 @@ require("mason-lspconfig").setup({
         "docker_language_server",
         "docker_compose_language_service",
         "bashls",
-        -- "elixirls",
-        -- "erlangls",
+        "elixirls",
+        "erlangls",
         "lemminx",
         "pyright",
         -- "jdtls",
         "jsonls",
         "ts_ls",
-        "solidity_ls_nomicfoundation",
-        "solidity_ls",
         "asm_lsp",
         "taplo",
         "rnix",
@@ -195,6 +192,21 @@ lsp.on_attach(function(on_attach_action, bufnr)
     -- not everytime i open file on buffer, annoying
     vim.notify_once(get_active_lsps(), vim.log.levels.INFO, { silent = true })
     -- -------------------------------------------------------------- --
+
+    -- ------------------------------- --
+    -- ---- SPECIAL CASES SECTION ---- --
+    -- ------------------------------- --
+    if vim.bo[bufnr].filetype == "elixir" then
+        pcall(vim.treesitter.start, bufnr, "elixir")
+    end
+    if vim.bo[bufnr].filetype == "heex" then
+        pcall(vim.treesitter.start, bufnr, "heex")
+    end
+    if vim.bo[bufnr].filetype == "eex" then
+        pcall(vim.treesitter.start, bufnr, "eex")
+    end
+    -- ------------------------------- --
+    -- ------------------------------- --
 
     -- lsp keymaps
     local opts = { buffer = bufnr, remap = false }

@@ -1,4 +1,4 @@
---§bca9ac1aebfb0e599a62a6da1dc96daeaac29d798eebddc39dfc2a62a47cdfb2§--
+--§5fb412259d44fd72cbd4ff30d5ca4a753e188ed1df85951672ce89fe24ca4eaa§--
 -- This file can be loaded by calling `lua require('plugins')` from your init.vim
 
 -- Only required if you have packer configured as `opt`
@@ -18,9 +18,15 @@ return require("packer").startup(function(use)
 
     -- ------------------------------------- --
     -- tree blame for neovim, very important --
-    use("nvim-treesitter/nvim-treesitter", { run = ":TSUpdate" })
+    use({
+        "nvim-treesitter/nvim-treesitter",
+        run = ":TSUpdate",
+    })
     -- sticky context for neovim, very important --
-    use("nvim-treesitter/nvim-treesitter-context")
+    use({
+        "nvim-treesitter/nvim-treesitter-context",
+        requires = { "nvim-treesitter/nvim-treesitter" },
+    })
     -- ------------------------------------- --
     -- the perfect Rose-pine colors --
     use({
