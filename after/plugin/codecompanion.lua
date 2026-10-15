@@ -1,148 +1,271 @@
+-- CodeCompanion.nvim - Z.ai, DeepSeek, ChatGPT Codex ACP, optional Claude ACP
+-- Fill in the two keys below. No shell environment variables required.
+-- Keep this file PRIVATE: never commit a file containing real API keys.
+-- Codex uses ChatGPT login, NOT your OpenAI API key.
+
+-- ================== PASTE YOUR API KEYS HERE ================== --
+local ZAI_API_KEY = "PASTE_YOUR_ZAI_KEY_HERE"
+local DEEPSEEK_API_KEY = "PASTE_YOUR_DEEPSEEK_KEY_HERE"
+
+-- Z.ai: "standard" for regular pay-as-you-go API;
+--       "coding" only if your key has access to the GLM Coding Plan.
+local ZAI_API_MODE = "standard"
+
+-- Optional for a supported Claude Code ACP subscription workflow.
+-- Leave blank if you are not using it.
+local CLAUDE_CODE_OAUTH_TOKEN = ""
+-- =============================================================== --
+
 local codecompanion = require("codecompanion")
+local adapters = require("codecompanion.adapters")
+
+-- Adjust these two values if you want different launch defaults.
+-- ACP cannot be used for inline requests, so inline always uses HTTP.
+local DEFAULT_CHAT_ADAPTER = "codex"
+local DEFAULT_INLINE_ADAPTER = "zai"
+
+-- Distinct endpoint paths prevent Coding Plan and standard API mixups.
+local zai_mode = ZAI_API_MODE
+if zai_mode ~= "standard" and zai_mode ~= "coding" then
+    error("Invalid ZAI_API_MODE: expected 'standard' or 'coding'")
+end
+local zai_prefix = zai_mode == "coding" and "/api/coding/paas/v4" or "/api/paas/v4"
 
 -- ---------------------------------------- --
 -- -- CODECOMPANION - FIDGET INTEGRATION -- --
--- Fidget doesn't have a built-in way to
--- listen to custom events, so we use
--- Neovim's autocmd system to update the progress
--- based on CodeCompanion's events.
--- We create a single fidget task that we update as
--- CodeCompanion sends events about the request status.
--- When the request finishes, we complete the fidget task.
-local progress = require("fidget.progress")
-local handles = {}
+-- Uses the request ID whenever possible to avoid mixing concurrent requests.
+-- Current CodeCompanion event: data.interaction (rather than data.strategy).
+local ok_fidget, progress = pcall(require, "fidget.progress")
+if ok_fidget then
+    local handles = {}
 
-vim.api.nvim_create_autocmd("User", {
-    pattern = "CodeCompanion*",
-    group = vim.api.nvim_create_augroup("CodeCompanionFidget", { clear = true }),
-    callback = function(e)
+    local function event_key(e)
         local data = e.data or {}
-        local id = data.id
+        return data.id or data.bufnr or e.buf or "global"
+    end
 
-        -- Events that don't have an id use bufnr as fallback
-        local key = id or data.bufnr or "global"
+    local function add_event(h, name)
+        if h and #h.events < 30 then
+            table.insert(h.events, name)
+        end
+    end
 
-        local event = e.match:gsub("^CodeCompanion", "")
-
-        if e.match == "CodeCompanionRequestStarted" then
-            local a = data.adapter or {}
-            local adapter_name = a.formatted_name or a.name or "Unknown"
-            local model = a.model or "default"
-
-            handles[key] = {
-                handle = progress.handle.create({
-                    title = adapter_name .. " (" .. model .. ")",
-                    message = "󱜚  Request started",
-                    lsp_client = { name = "CodeCompanion" },
-                }),
-                events = { "RequestStarted" },
-                strategy = data.strategy or "chat",
-                adapter = adapter_name,
-                model = model,
-                start_time = vim.uv.hrtime(),
-            }
-        elseif e.match == "CodeCompanionRequestStreaming" then
+    vim.api.nvim_create_autocmd("User", {
+        pattern = "CodeCompanion*",
+        group = vim.api.nvim_create_augroup("CodeCompanionFidget", { clear = true }),
+        callback = function(e)
+            local data = e.data or {}
+            local key = event_key(e)
+            local event = e.match
             local h = handles[key]
-            if h then
-                table.insert(h.events, "Streaming")
-                h.handle.message = "󱜚  󰔰  Streaming response..."
+
+            if event == "CodeCompanionRequestStarted" then
+                -- Do not leave a previous task dangling when an ID is reused.
+                if h then
+                    h.handle:finish()
+                end
+
+                local adapter = data.adapter or {}
+                local adapter_name = tostring(adapter.formatted_name or adapter.name or "Unknown")
+                local model = adapter.model or "agent/default"
+                if type(model) ~= "string" and type(model) ~= "number" then
+                    model = "agent/default"
+                end
+                model = tostring(model)
+                local interaction = tostring(data.interaction or data.strategy or "chat")
+                handles[key] = {
+                    handle = progress.handle.create({
+                        title = adapter_name .. " (" .. model .. ")",
+                        message = "󱜚  Request started",
+                        lsp_client = { name = "CodeCompanion" },
+                    }),
+                    events = { "RequestStarted" },
+                    interaction = interaction,
+                    adapter = adapter_name,
+                    model = model,
+                    start_time = vim.uv.hrtime(),
+                }
+                return
             end
-        elseif e.match == "CodeCompanionRequestFinished" then
-            local h = handles[key]
-            if h then
-                table.insert(h.events, "Finished")
-                local elapsed = h.start_time and string.format("%.1fs", (vim.uv.hrtime() - h.start_time) / 1e9) or ""
-                local status_icon = data.status == "success" and "" or data.status == "error" and "" or "󰜺"
-                local status_text = data.status == "success" and "Complete"
-                    or data.status == "error" and "Error"
-                    or "Cancelled"
 
-                h.handle.title = h.adapter .. " (" .. h.model .. ") • " .. h.strategy
-                h.handle.message = status_icon
+            if not h then
+                return
+            end
+
+            if event == "CodeCompanionRequestStreaming" then
+                if not h.streaming then
+                    add_event(h, "Streaming")
+                    h.streaming = true
+                end
+                h.handle.message = "󱜚  󰔰  Streaming response..."
+            elseif event == "CodeCompanionRequestFinished" then
+                add_event(h, "Finished")
+                local elapsed = string.format("%.1fs", (vim.uv.hrtime() - h.start_time) / 1e9)
+                local status = tostring(data.status or "success")
+                local icon = status == "success" and "" or status == "error" and "" or "󰜺"
+                local label = status == "success" and "Complete"
+                    or status == "error" and "Error"
+                    or "Finished (" .. status .. ")"
+                h.handle.title = h.adapter .. " (" .. h.model .. ") • " .. h.interaction
+                h.handle.message = icon
                     .. " "
-                    .. status_text
+                    .. label
                     .. " in "
                     .. elapsed
                     .. " Events: "
                     .. table.concat(h.events, " → ")
                 h.handle:finish()
                 handles[key] = nil
-            end
-        elseif e.match == "CodeCompanionRequestError" then
-            local h = handles[key]
-            if h then
-                table.insert(h.events, "Error")
-                local status_icon = data.status == "error" and "" or "󰜺"
-                local err_msg = data.error or "Unknown error"
-                h.handle.title = h.adapter .. " (" .. h.model .. ") • " .. h.strategy
-                h.handle.message = status_icon .. "  " .. err_msg .. " Events: " .. table.concat(h.events, " → ")
-                vim.defer_fn(function()
-                    if handles[key] then
-                        h.handle:finish()
-                        handles[key] = nil
-                    end
-                end, 3000)
-            end
 
-        -- Track other CodeCompanion events for visibility
-        elseif e.match == "CodeCompanionChatCreated" then
-            local h = handles[key]
-            if h then
-                table.insert(h.events, "ChatCreated")
-            end
-        elseif e.match == "CodeCompanionChatSubmitted" then
-            local h = handles[key]
-            if h then
-                table.insert(h.events, "Submitted")
+            -- Compatibility with older integrations emitting this event.
+            elseif event == "CodeCompanionRequestError" then
+                add_event(h, "Error")
+                local err_msg = tostring(data.error or "Unknown error")
+                h.handle.message = "  " .. err_msg:sub(1, 180)
+                h.handle:finish()
+                handles[key] = nil
+            elseif event == "CodeCompanionChatSubmitted" then
+                add_event(h, "Submitted")
                 h.handle.message = "󰸇  Submitting..."
-            end
-        elseif e.match == "CodeCompanionInlineStarted" then
-            local h = handles[key]
-            if h then
-                table.insert(h.events, "InlineStarted")
-                h.handle.message = "󰧮  󰔰  󱜚  Inline transformation..."
-            end
-        elseif e.match == "CodeCompanionInlineFinished" then
-            local h = handles[key]
-            if h then
-                table.insert(h.events, "InlineFinished")
-            end
-        elseif e.match == "CodeCompanionAgentStarted" then
-            local h = handles[key]
-            if h then
-                table.insert(h.events, "AgentStarted")
-                h.handle.message = "󱜚  󰔰    Agent working..."
-            end
-        elseif e.match == "CodeCompanionToolExecuting" then
-            local h = handles[key]
-            if h then
-                local tool_name = data.tool or "tool"
-                table.insert(h.events, "Tool:" .. tool_name)
+            elseif event == "CodeCompanionInlineStarted" then
+                add_event(h, "InlineStarted")
+                h.handle.message = "󰧮  󰔰  Inline transformation..."
+            elseif event == "CodeCompanionInlineFinished" then
+                add_event(h, "InlineFinished")
+            elseif event == "CodeCompanionToolStarted" or event == "CodeCompanionToolExecuting" then
+                local tool = data.tool
+                local tool_name = type(tool) == "table" and (tool.name or tool.id)
+                    or type(tool) == "string" and tool
+                    or "tool"
+                tool_name = tostring(tool_name)
+                add_event(h, "Tool:" .. tool_name)
                 h.handle.message = "󱜚  󰔰  󱑟  Executing " .. tool_name .. "..."
+            elseif event == "CodeCompanionToolFinished" then
+                add_event(h, "ToolFinished")
             end
-        end
-    end,
-})
+        end,
+    })
+end
 -- ---------------------------------------- --
 
 -- --------------------------------- --
 -- ---- CONFIGURE CODECOMPANION ---- --
--- This is a basic configuration that
--- sets up the Copilot adapter (separate)
--- and codecompanion-history extension (built-in).
 codecompanion.setup({
     adapters = {
-        copilot = function()
-            return require("codecompanion.adapters").extend("copilot", {})
-        end,
+        http = {
+            -- Keep the previous Copilot provider available if authenticated.
+            copilot = function()
+                return adapters.extend("copilot", {})
+            end,
+
+            -- Z.ai: either standard paid API or Coding Plan, selected via env.
+            -- Static choices prevent accidentally querying an incompatible
+            -- /models endpoint or borrowing another provider's cached models.
+            zai = function()
+                return adapters.extend("openai_compatible", {
+                    name = "zai",
+                    formatted_name = "Z.ai GLM (" .. zai_mode .. ")",
+                    env = {
+                        -- Function returns the literal key, not an env var name.
+                        api_key = function()
+                            return ZAI_API_KEY
+                        end,
+                        url = "https://api.z.ai",
+                        chat_url = zai_prefix .. "/chat/completions",
+                        models_endpoint = zai_prefix .. "/models",
+                    },
+                    opts = {
+                        stream = true,
+                        tools = true,
+                        -- Image input support varies by GLM model/endpoint.
+                        vision = false,
+                    },
+                    schema = {
+                        model = {
+                            default = "glm-5.3-flash",
+                            choices = { "glm-5.3-flash", "glm-5.3", "glm-5.2" },
+                        },
+                    },
+                })
+            end,
+
+            -- The native DeepSeek adapter knows its reasoning/tool protocol.
+            -- DeepSeek V4.1 Flash's current public model ID is deepseek-flash.
+            deepseek = function()
+                return adapters.extend("deepseek", {
+                    env = {
+                        api_key = function()
+                            return DEEPSEEK_API_KEY
+                        end,
+                    },
+                    schema = {
+                        model = {
+                            default = "deepseek-flash",
+                            choices = {
+                                ["deepseek-flash"] = {
+                                    formatted_name = "DeepSeek V4.1 Flash",
+                                    meta = { context_window = 1048576 },
+                                    opts = { can_reason = true, can_use_tools = true },
+                                },
+                            },
+                        },
+                        -- Low-cost default for short questions and history titles.
+                        -- Can be enabled per chat via the debug/model options.
+                        ["thinking.type"] = { default = "disabled" },
+                    },
+                })
+            end,
+        },
+
+        acp = {
+            extend = {
+                -- ChatGPT subscription: NO OpenAI API key required.
+                codex = {
+                    defaults = {
+                        auth_method = "chat-gpt",
+                        -- Agent itself picks a supported default model.
+                    },
+                    env = {
+                        -- Built-in Codex preset defaults to OPENAI_API_KEY.
+                        -- When unset, CodeCompanion may forward that *literal*
+                        -- text as a key. Override it, and any inherited key,
+                        -- so codex-acp uses the ChatGPT login instead.
+                        OPENAI_API_KEY = "",
+                        CODEX_API_KEY = "",
+                    },
+                },
+
+                -- Optional: install claude-agent-acp and authenticate using
+                -- a permitted Claude Agent SDK subscription credential.
+                -- Explicitly avoid forwarding the literal string
+                -- "CLAUDE_CODE_OAUTH_TOKEN" if the token is absent.
+                claude_code = {
+                    env = {
+                        CLAUDE_CODE_OAUTH_TOKEN = function()
+                            return CLAUDE_CODE_OAUTH_TOKEN ~= "" and CLAUDE_CODE_OAUTH_TOKEN
+                                or (vim.env.CLAUDE_CODE_OAUTH_TOKEN or "")
+                        end,
+                    },
+                },
+            },
+        },
     },
-    strategies = {
-        chat = { adapter = "copilot", model = "gpt-4o" },
-        inline = { adapter = "copilot", model = "gpt-4o" },
+
+    interactions = {
+        -- Compaction and built-in background tasks need an HTTP adapter.
+        background = { adapter = "deepseek" },
+        chat = { adapter = DEFAULT_CHAT_ADAPTER },
+        inline = { adapter = DEFAULT_INLINE_ADAPTER },
+        -- Command generation is an HTTP interaction as well.
+        cmd = { adapter = "deepseek" },
     },
+
     opts = {
-        log_level = "DEBUG",
+        -- Avoid persisting sensitive request content in verbose DEBUG logs.
+        -- Change to DEBUG temporarily when troubleshooting.
+        log_level = "ERROR",
     },
+
     extensions = {
         mcphub = {
             callback = "mcphub.extensions.codecompanion",
@@ -155,83 +278,53 @@ codecompanion.setup({
         history = {
             enabled = true,
             opts = {
-                -- Keymap to open history from chat buffer (default: gh)
                 keymap = "<leader>M",
-                -- Keymap to save the current chat manually (when auto_save is disabled)
                 save_chat_keymap = "<leader>Ms",
-                -- Save all chats by default (disable to save only manually using 'sc')
                 auto_save = true,
-                -- Number of days after which chats are automatically deleted (0 to disable)
                 expiration_days = 0,
-                -- Picker interface (auto resolved to a valid picker)
-                picker = "telescope", --- ("telescope", "snacks", "fzf-lua", or "default")
-                ---Optional filter function to control which chats are shown when browsing
-                chat_filter = nil, -- function(chat_data) return boolean end
-                -- Customize picker keymaps (optional)
+                picker = "telescope",
+                chat_filter = nil,
                 picker_keymaps = {
                     rename = { n = "r", i = "<M-r>" },
                     delete = { n = "d", i = "<M-d>" },
                     duplicate = { n = "<C-y>", i = "<C-y>" },
                 },
-                ---Automatically generate titles for new chats
                 auto_generate_title = true,
                 title_generation_opts = {
-                    ---Adapter for generating titles (defaults to current chat adapter)
-                    adapter = nil, -- "copilot"
-                    ---Model for generating titles (defaults to current chat model)
-                    model = nil, -- "gpt-4o"
-                    ---Number of user prompts after which to refresh the title (0 to disable)
-                    refresh_every_n_prompts = 0, -- e.g., 3 to refresh after every 3rd user prompt
-                    ---Maximum number of times to refresh the title (default: 3)
+                    -- ACP agents are not HTTP models. Use a cheap HTTP model
+                    -- for background title generation rather than Codex/Claude.
+                    adapter = "deepseek",
+                    model = "deepseek-flash",
+                    refresh_every_n_prompts = 0,
                     max_refreshes = 3,
                     format_title = function(original_title)
-                        -- this can be a custom function that applies some custom
-                        -- formatting to the title.
                         return original_title
                     end,
                 },
-                ---On exiting and entering neovim, loads the last chat on opening chat
                 continue_last_chat = false,
-                ---When chat is cleared with `gx` delete the chat from history
                 delete_on_clearing_chat = false,
-                ---Directory path to save the chats
                 dir_to_save = vim.fn.stdpath("data") .. "/codecompanion-history",
-                ---Enable detailed logging for history extension
                 enable_logging = false,
 
-                -- Summary system
                 summary = {
-                    -- Keymap to generate summary for current chat (default: "gcs")
                     create_summary_keymap = "gcs",
-                    -- Keymap to browse summaries (default: "gbs")
                     browse_summaries_keymap = "gbs",
-
                     generation_opts = {
-                        adapter = nil, -- defaults to current chat adapter
-                        model = nil, -- defaults to current chat model
-                        context_size = 90000, -- max tokens that the model supports
-                        include_references = true, -- include slash command content
-                        include_tool_outputs = true, -- include tool execution results
-                        system_prompt = nil, -- custom system prompt (string or function)
-                        format_summary = nil, -- custom function to format generated summary e.g to remove <think/> tags from summary
+                        adapter = "deepseek",
+                        model = "deepseek-flash",
+                        context_size = 90000,
+                        include_references = true,
+                        include_tool_outputs = true,
+                        system_prompt = nil,
+                        format_summary = nil,
                     },
                 },
 
-                -- Memory system (requires VectorCode CLI)
                 memory = {
-                    -- Automatically index summaries when they are generated
                     auto_create_memories_on_summary_generation = true,
-                    -- Path to the VectorCode executable
                     vectorcode_exe = "vectorcode",
-                    -- Tool configuration
-                    tool_opts = {
-                        -- Default number of memories to retrieve
-                        default_num = 10,
-                    },
-                    -- Enable notifications for indexing progress
+                    tool_opts = { default_num = 10 },
                     notify = true,
-                    -- Index all existing memories on startup
-                    -- (requires VectorCode 0.6.12+ for efficient incremental indexing)
                     index_on_startup = false,
                 },
             },
@@ -239,13 +332,12 @@ codecompanion.setup({
     },
 })
 
--- dedicated keymaps for codecompanion actions and chat
--- sacrificed key `m` for "m"odel and "m"enu, but it felt appropriate
+-- Original keymaps retained.
 vim.keymap.set({ "n", "v" }, "<C-m>", "<cmd>CodeCompanion<cr>", { noremap = true, silent = true })
 vim.keymap.set({ "n", "v" }, "<S-m>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
 vim.keymap.set({ "n", "v" }, "<leader>m", "<cmd>CodeCompanionChat Toggle<cr>", { noremap = true, silent = true })
 vim.keymap.set("v", "gm", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
 
--- Expand 'cc' into 'CodeCompanion' in the command line
+-- Expand 'cc' into 'CodeCompanion' in the command line.
 vim.cmd([[cab cc CodeCompanion]])
 -- --------------------------------- --
