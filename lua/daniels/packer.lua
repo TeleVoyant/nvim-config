@@ -1,4 +1,4 @@
---§5fb412259d44fd72cbd4ff30d5ca4a753e188ed1df85951672ce89fe24ca4eaa§--
+--§294fcc309b14fa2078cda0f988a00bfe48928cf56dd32c88df62895be2ec8c8d§--
 -- This file can be loaded by calling `lua require('plugins')` from your init.vim
 
 -- Only required if you have packer configured as `opt`
@@ -75,6 +75,12 @@ return require("packer").startup(function(use)
     use({
         "nvim-tree/nvim-tree.lua",
         requires = { "nvim-tree/nvim-web-devicons" }, -- optional
+    })
+    use({
+        "mikavilpas/yazi.nvim",
+        requires = {
+            "nvim-lua/plenary.nvim",
+        },
     })
     -- --------------------------- --
     -- navigation bar plugin (top) --

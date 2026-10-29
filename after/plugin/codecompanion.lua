@@ -3,9 +3,35 @@
 -- Keep this file PRIVATE: never commit a file containing real API keys.
 -- Codex uses ChatGPT login, NOT your OpenAI API key.
 
+-- secrets.lua must return a table, e.g.:
+--   return { zai = "...", deepseek = "...", claude_oauth = "" }
+-- missing/empty entries fall back to environment variables of the same name.
+local function pick(...)
+    for i = 1, select("#", ...) do
+        local value = select(i, ...)
+        if type(value) == "string" and value ~= "" then
+            return value
+        end
+    end
+    return ""
+end
+
+local secrets = {}
+local secrets_path = vim.fn.stdpath("config") .. "/secrets.lua"
+if vim.uv.fs_stat(secrets_path) then
+    local ok, loaded = pcall(dofile, secrets_path)
+    if not ok then
+        vim.notify("codecompanion: secrets.lua error: " .. tostring(loaded), vim.log.levels.ERROR)
+    elseif type(loaded) ~= "table" then
+        vim.notify("codecompanion: secrets.lua must return a table", vim.log.levels.ERROR)
+    else
+        secrets = loaded
+    end
+end
+
 -- ================== PASTE YOUR API KEYS HERE ================== --
-local ZAI_API_KEY = "PASTE_YOUR_ZAI_KEY_HERE"
-local DEEPSEEK_API_KEY = "PASTE_YOUR_DEEPSEEK_KEY_HERE"
+local ZAI_API_KEY = pick(secrets.ZAI_API_KEY, vim.env.ZAI_API_KEY)
+local DEEPSEEK_API_KEY = pick(secrets.DEEPSEEK_API_KEY, vim.env.DEEPSEEK_API_KEY)
 
 -- Z.ai: "standard" for regular pay-as-you-go API;
 --       "coding" only if your key has access to the GLM Coding Plan.
@@ -13,7 +39,7 @@ local ZAI_API_MODE = "standard"
 
 -- Optional for a supported Claude Code ACP subscription workflow.
 -- Leave blank if you are not using it.
-local CLAUDE_CODE_OAUTH_TOKEN = ""
+local CLAUDE_CODE_OAUTH_TOKEN = pick(secrets.CLAUDE_CODE_OAUTH_TOKEN, vim.env.CLAUDE_CODE_OAUTH_TOKEN)
 -- =============================================================== --
 
 local codecompanion = require("codecompanion")
@@ -22,12 +48,12 @@ local adapters = require("codecompanion.adapters")
 -- Adjust these two values if you want different launch defaults.
 -- ACP cannot be used for inline requests, so inline always uses HTTP.
 local DEFAULT_CHAT_ADAPTER = "codex"
-local DEFAULT_INLINE_ADAPTER = "zai"
+local DEFAULT_INLINE_ADAPTER = "codex"
 
 -- Distinct endpoint paths prevent Coding Plan and standard API mixups.
 local zai_mode = ZAI_API_MODE
 if zai_mode ~= "standard" and zai_mode ~= "coding" then
-    error("Invalid ZAI_API_MODE: expected 'standard' or 'coding'")
+    vim.notify("Invalid ZAI_API_MODE: expected 'standard' or 'coding'", vim.log.levels.ERROR)
 end
 local zai_prefix = zai_mode == "coding" and "/api/coding/paas/v4" or "/api/paas/v4"
 
@@ -222,6 +248,7 @@ codecompanion.setup({
                 -- ChatGPT subscription: NO OpenAI API key required.
                 codex = {
                     defaults = {
+
                         auth_method = "chat-gpt",
                         -- Agent itself picks a supported default model.
                     },
@@ -230,8 +257,12 @@ codecompanion.setup({
                         -- When unset, CodeCompanion may forward that *literal*
                         -- text as a key. Override it, and any inherited key,
                         -- so codex-acp uses the ChatGPT login instead.
-                        OPENAI_API_KEY = "",
-                        CODEX_API_KEY = "",
+                        OPENAI_API_KEY = function()
+                            return ""
+                        end,
+                        CODEX_API_KEY = function()
+                            return ""
+                        end,
                     },
                 },
 
@@ -321,7 +352,7 @@ codecompanion.setup({
                 },
 
                 memory = {
-                    auto_create_memories_on_summary_generation = true,
+                    auto_create_memories_on_summary_generation = vim.fn.executable("vectorcode") == 1,
                     vectorcode_exe = "vectorcode",
                     tool_opts = { default_num = 10 },
                     notify = true,
